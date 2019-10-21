@@ -18,6 +18,7 @@ bin/
 gen/
 out/
 release/
+node_modules/
 
 # Gradle files
 .gradle/
