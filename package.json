@@ -2,16 +2,18 @@
   "name": "dev.mdemianchuk.ctatracker",
   "displayName": "CtaTracker",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "A CTA tracker mobile application",
   "main": "index.js",
-  "keywords": [
-    "ecosystem:cordova"
-  ],
-  "author": "Apache Cordova Team",
+  "scripts": {
+    "compile-ts": "tsc"
+  },
+  "author": "Mykola Demianchuk",
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/node": "^12.11.2",
     "cordova-android": "^8.1.0",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "typescript": "^3.6.4"
   },
   "devDependencies": {
     "cordova-plugin-whitelist": "^1.3.4"
