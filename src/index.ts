@@ -18,7 +18,7 @@
  */
 var app = {
     // Application Constructor
-    initialize: function() {
+    initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
 
@@ -26,15 +26,15 @@ var app = {
     //
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
-    onDeviceReady: function() {
+    onDeviceReady: function () {
         this.receivedEvent('deviceready');
     },
 
     // Update DOM on a Received Event
-    receivedEvent: function(id : string) {
-        var parentElement : Element = document.getElementById(id)!;
-        var listeningElement : Element = parentElement.querySelector('.listening')!;
-        var receivedElement : Element = parentElement.querySelector('.received')!;
+    receivedEvent: function (id: string) {
+        var parentElement: Element = document.getElementById(id)!;
+        var listeningElement: Element = parentElement.querySelector('.listening')!;
+        var receivedElement: Element = parentElement.querySelector('.received')!;
 
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
