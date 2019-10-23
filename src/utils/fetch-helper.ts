@@ -5,7 +5,7 @@ export class FetchHelper {
     private constructor() {
     }
 
-    public static async fetch(url: URL): Promise<object> {
+    public static async fetch<T>(url: URL): Promise<T> {
         return fetch(url)
             .then(response => response.json())
             .catch(err => console.error('Error during fetching the url', err));
