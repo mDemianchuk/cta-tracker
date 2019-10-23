@@ -4,8 +4,8 @@ import {FetchHelper} from "../utils/fetch-helper";
 import {Direction} from "../models/direction";
 
 export class BusTrackerClient {
-    apiKey: string;
-    baseUrl: URL;
+    readonly apiKey: string;
+    readonly baseUrl: URL;
 
     public constructor() {
         this.apiKey = ApiKeyProvider.getApiKey(ApiType.BUS);

@@ -20,6 +20,7 @@ out/
 release/
 node_modules/
 www/js/
+src/test.ts
 
 # Gradle files
 .gradle/
