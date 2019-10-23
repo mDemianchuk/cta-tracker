@@ -11,13 +11,11 @@ export class TrainDataClient {
         let stationJson: object[] = [];
         let trainJson: object[] = await this.getTrainData();
         trainJson.forEach((json: { [key: string]: any }) => {
-            if (json.hasOwnProperty(route) && json[route] === true) {
-                if (json.hasOwnProperty('map_id') && json.hasOwnProperty('station_name')) {
-                    stationJson.push({
-                        map_id: json['map_id'],
-                        station_name: json['station_name']
-                    });
-                }
+            if (this.isValidStation(json, route)) {
+                stationJson.push({
+                    map_id: json['map_id'],
+                    station_name: json['station_name']
+                });
             }
         });
         return new Promise(resolve => resolve({stations: stationJson}));
@@ -27,15 +25,12 @@ export class TrainDataClient {
         let stopJson: object[] = [];
         let trainJson: object[] = await this.getTrainData();
         trainJson.forEach((json: { [key: string]: any }) => {
-            if (json.hasOwnProperty(route) && json[route] === true
-                && json.hasOwnProperty('map_id') && json['map_id'] === stationId) {
-                if (json.hasOwnProperty('stop_id') && json.hasOwnProperty('stop_name')) {
-                    stopJson.push({
-                        map_id: json['map_id'],
-                        stop_id: json['stop_id'],
-                        stop_name: json['stop_name']
-                    });
-                }
+            if (this.isValidStop(json, route, stationId)) {
+                stopJson.push({
+                    map_id: json['map_id'],
+                    stop_id: json['stop_id'],
+                    stop_name: json['stop_name']
+                });
             }
         });
         return new Promise(resolve => resolve({stops: stopJson}));
@@ -43,5 +38,16 @@ export class TrainDataClient {
 
     private async getTrainData(): Promise<object[]> {
         return FetchHelper.fetch<object[]>(this.baseUrl);
+    }
+
+    private isValidStation(json: { [key: string]: any }, route: string): boolean {
+        return json.hasOwnProperty(route) && json[route] === true
+            && json.hasOwnProperty('map_id') && json.hasOwnProperty('station_name');
+    }
+
+    private isValidStop(json: { [key: string]: any }, route: string, stationId: string): boolean {
+        return json.hasOwnProperty(route) && json[route] === true
+            && json.hasOwnProperty('map_id') && json['map_id'] === stationId
+            && json.hasOwnProperty('stop_id') && json.hasOwnProperty('stop_name');
     }
 }
