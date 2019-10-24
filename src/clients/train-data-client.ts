@@ -1,53 +1,56 @@
 import {FetchHelper} from "../utils/fetch-helper";
+import {TrainStation} from "../models/train-station";
+import {TrainStop} from "../models/train-stop";
+import {TrainStationMapper} from "../mappers/train-station-mapper";
+import {TrainStopMapper} from "../mappers/train-stop-mapper";
 
 export class TrainDataClient {
-    readonly baseUrl: URL;
+    private readonly baseUrl: URL;
 
     constructor() {
         this.baseUrl = new URL('https://data.cityofchicago.org/resource/8pix-ypme.json');
     }
 
-    public async getStations(route: string): Promise<object> {
-        let stationJson: object[] = [];
+    async getStations(routeShortId: string): Promise<TrainStation[]> {
+        let stations: TrainStation[] = [];
         let trainJson: object[] = await this.getTrainData();
-        trainJson.forEach((json: { [key: string]: any }) => {
-            if (this.isValidStation(json, route)) {
-                stationJson.push({
-                    map_id: json['map_id'],
-                    station_name: json['station_name']
-                });
+        trainJson.forEach(json => {
+            if (this.isValidRoute(json, routeShortId)) {
+                let station = TrainStationMapper.map(json);
+                if (station) {
+                    stations.push(station);
+                }
             }
         });
-        return new Promise(resolve => resolve({stations: stationJson}));
+        return new Promise(resolve => resolve(stations));
     }
 
-    public async getStops(route: string, stationId: string): Promise<object> {
-        let stopJson: object[] = [];
+    async getStops(routeShortId: string, stationId: string): Promise<TrainStop[]> {
+        let stops: TrainStop[] = [];
         let trainJson: object[] = await this.getTrainData();
         trainJson.forEach((json: { [key: string]: any }) => {
-            if (this.isValidStop(json, route, stationId)) {
-                stopJson.push({
-                    map_id: json['map_id'],
-                    stop_id: json['stop_id'],
-                    stop_name: json['stop_name']
-                });
+            if (this.isValidStation(json, routeShortId, stationId)) {
+                let stop = TrainStopMapper.map(json);
+                if (stop) {
+                    stops.push(stop);
+                }
             }
         });
-        return new Promise(resolve => resolve({stops: stopJson}));
+        return new Promise(resolve => resolve(stops));
     }
 
     private async getTrainData(): Promise<object[]> {
         return FetchHelper.fetch<object[]>(this.baseUrl);
     }
 
-    private isValidStation(json: { [key: string]: any }, route: string): boolean {
-        return json.hasOwnProperty(route) && json[route] === true
-            && json.hasOwnProperty('map_id') && json.hasOwnProperty('station_name');
+    private isValidRoute(json: { [key: string]: any }, routeShortId: string): boolean {
+        return json.hasOwnProperty(routeShortId)
+            && json[routeShortId] === true;
     }
 
-    private isValidStop(json: { [key: string]: any }, route: string, stationId: string): boolean {
-        return json.hasOwnProperty(route) && json[route] === true
-            && json.hasOwnProperty('map_id') && json['map_id'] === stationId
-            && json.hasOwnProperty('stop_id') && json.hasOwnProperty('stop_name');
+    private isValidStation(json: { [key: string]: any }, routeShortId: string, stationId: string): boolean {
+        return this.isValidRoute(json, routeShortId)
+            && json.hasOwnProperty('map_id')
+            && json['map_id'] === stationId;
     }
 }

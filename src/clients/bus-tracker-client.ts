@@ -4,10 +4,10 @@ import {FetchHelper} from "../utils/fetch-helper";
 import {Direction} from "../models/direction";
 
 export class BusTrackerClient {
-    readonly apiKey: string;
-    readonly baseUrl: URL;
+    private readonly apiKey: string;
+    private readonly baseUrl: URL;
 
-    public constructor() {
+    constructor() {
         this.apiKey = ApiKeyProvider.getApiKey(ApiType.BUS);
         this.baseUrl = new URL('http://www.ctabustracker.com/bustime/api/v2/');
     }
