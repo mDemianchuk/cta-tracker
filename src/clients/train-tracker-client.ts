@@ -52,9 +52,9 @@ export class TrainTrackerClient {
     }
 
     private async getPredictions(url: URL) {
-        let predictions: Prediction[] = [];
         return FetchHelper.fetch(url)
             .then((response: { [key: string]: any }) => {
+                let predictions: Prediction[] = [];
                 if (response.hasOwnProperty('ctatt')) {
                     let json: { [key: string]: any } = response['ctatt'];
                     if (json.hasOwnProperty('eta')) {
@@ -67,7 +67,7 @@ export class TrainTrackerClient {
                         });
                     }
                 }
-                return predictions
+                return predictions;
             });
     }
 }
