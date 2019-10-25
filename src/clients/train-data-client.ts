@@ -14,14 +14,14 @@ export class TrainDataClient {
     async getStations(routeShortId: string): Promise<TrainStation[]> {
         return this.getTrainData()
             .then((response: object[]) => {
-                let stations: TrainStation[] = [];
+                let stationMap: Map<string, TrainStation> = new Map();
                 response.forEach(json => {
                     let station = TrainStationMapper.map(json);
                     if (station && this.isValidRoute(station, routeShortId)) {
-                        stations.push(station);
+                        stationMap.set(station.id, station);
                     }
                 });
-                return stations;
+                return Array.from(stationMap.values());
             });
     }
 
