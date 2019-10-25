@@ -13,30 +13,34 @@ export class TrainDataClient {
 
     async getStations(routeShortId: string): Promise<TrainStation[]> {
         let stations: TrainStation[] = [];
-        let trainJson: object[] = await this.getTrainData();
-        trainJson.forEach(json => {
-            if (this.isValidRoute(json, routeShortId)) {
-                let station = TrainStationMapper.map(json);
-                if (station) {
-                    stations.push(station);
-                }
-            }
-        });
-        return new Promise(resolve => resolve(stations));
+        return this.getTrainData()
+            .then((response: object[]) => {
+                response.forEach(json => {
+                    if (this.isValidRoute(json, routeShortId)) {
+                        let station = TrainStationMapper.map(json);
+                        if (station) {
+                            stations.push(station);
+                        }
+                    }
+                });
+                return new Promise(resolve => resolve(stations));
+            });
     }
 
     async getStops(routeShortId: string, stationId: string): Promise<TrainStop[]> {
         let stops: TrainStop[] = [];
-        let trainJson: object[] = await this.getTrainData();
-        trainJson.forEach((json: { [key: string]: any }) => {
-            if (this.isValidStation(json, routeShortId, stationId)) {
-                let stop = TrainStopMapper.map(json);
-                if (stop) {
-                    stops.push(stop);
-                }
-            }
-        });
-        return new Promise(resolve => resolve(stops));
+        return this.getTrainData()
+            .then((response: object[]) => {
+                response.forEach((json: { [key: string]: any }) => {
+                    if (this.isValidStation(json, routeShortId, stationId)) {
+                        let stop = TrainStopMapper.map(json);
+                        if (stop) {
+                            stops.push(stop);
+                        }
+                    }
+                });
+                return new Promise(resolve => resolve(stops));
+            });
     }
 
     private async getTrainData(): Promise<object[]> {
