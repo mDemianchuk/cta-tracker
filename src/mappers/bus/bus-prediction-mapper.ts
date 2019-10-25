@@ -1,12 +1,11 @@
 import {BusPrediction} from "../../models/bus/bus-prediction";
+import {CtaMapper} from "../cta-mapper";
 
-export class BusPredictionMapper {
-    private constructor() {
-    }
+export class BusPredictionMapper implements CtaMapper<BusPrediction> {
 
-    static map(json: { [key: string]: any }): BusPrediction | undefined {
+    map(json: { [key: string]: any }): BusPrediction | undefined {
         let prediction;
-        if (BusPredictionMapper.isValidPrediction(json)) {
+        if (this.isValid(json)) {
             prediction = new BusPrediction(
                 json['tmstmp'],
                 json['typ'],
@@ -22,7 +21,7 @@ export class BusPredictionMapper {
         return prediction;
     }
 
-    private static isValidPrediction(json: { [key: string]: any }): boolean {
+    isValid(json: { [key: string]: any }): boolean {
         return json.hasOwnProperty('tmstmp')
             && json.hasOwnProperty('typ')
             && json.hasOwnProperty('stpnm')

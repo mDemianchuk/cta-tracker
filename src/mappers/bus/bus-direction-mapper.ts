@@ -1,18 +1,17 @@
 import {BusDirection} from "../../models/bus/bus-direction";
+import {CtaMapper} from "../cta-mapper";
 
-export class BusDirectionMapper {
-    private constructor() {
-    }
+export class BusDirectionMapper implements CtaMapper<BusDirection> {
 
-    static map(json: { [key: string]: any }): BusDirection | undefined {
+    map(json: { [key: string]: any }): BusDirection | undefined {
         let direction;
-        if (BusDirectionMapper.isValidDirection(json)) {
+        if (this.isValid(json)) {
             direction = new BusDirection(json['dir']);
         }
         return direction;
     }
 
-    private static isValidDirection(json: { [key: string]: any }): boolean {
+    isValid(json: { [key: string]: any }): boolean {
         return json.hasOwnProperty('dir');
     }
 }

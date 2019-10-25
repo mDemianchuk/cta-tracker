@@ -16,7 +16,7 @@ export class TrainDataClient {
             .then((response: object[]) => {
                 let stationMap: Map<string, TrainStation> = new Map();
                 response.forEach(json => {
-                    let station = TrainStationMapper.map(json);
+                    let station = new TrainStationMapper().map(json);
                     if (station && this.isValidRoute(station, routeShortId)) {
                         stationMap.set(station.id, station);
                     }
@@ -30,7 +30,7 @@ export class TrainDataClient {
             .then((response: object[]) => {
                 let stops: TrainStop[] = [];
                 response.forEach(json => {
-                    let stop = TrainStopMapper.map(json);
+                    let stop = new TrainStopMapper().map(json);
                     if (stop && this.isValidStation(stop, routeShortId, stationId)) {
                         stops.push(stop);
                     }

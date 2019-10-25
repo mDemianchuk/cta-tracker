@@ -1,12 +1,11 @@
+import {CtaMapper} from "../cta-mapper";
 import {TrainPrediction} from "../../models/train/train-prediction";
 
-export class TrainPredictionMapper {
-    private constructor() {
-    }
+export class TrainPredictionMapper implements CtaMapper<TrainPrediction> {
 
-    static map(json: { [key: string]: any }): TrainPrediction | undefined {
+    map(json: { [key: string]: any }): TrainPrediction | undefined {
         let prediction;
-        if (TrainPredictionMapper.isValidPrediction(json)) {
+        if (this.isValid(json)) {
             let isApproaching: boolean = json['isApp'] === '1';
             let isDelayed: boolean = json['isDly'] === '1';
             let routeId: string = (json['rt'] as string).toLowerCase();
@@ -24,7 +23,7 @@ export class TrainPredictionMapper {
         return prediction;
     }
 
-    private static isValidPrediction(json: { [key: string]: any }): boolean {
+    isValid(json: { [key: string]: any }): boolean {
         return json.hasOwnProperty('staNm')
             && json.hasOwnProperty('stpDe')
             && json.hasOwnProperty('rt')
