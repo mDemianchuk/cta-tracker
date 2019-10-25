@@ -1,8 +1,8 @@
-import {FetchHelper} from "../utils/fetch-helper";
-import {TrainStation} from "../models/train-station";
-import {TrainStop} from "../models/train-stop";
-import {TrainStationMapper} from "../mappers/train-station-mapper";
-import {TrainStopMapper} from "../mappers/train-stop-mapper";
+import {FetchHelper} from "../../utils/fetch-helper";
+import {TrainStation} from "../../models/train/train-station";
+import {TrainStop} from "../../models/train/train-stop";
+import {TrainStationMapper} from "../../mappers/train/train-station-mapper";
+import {TrainStopMapper} from "../../mappers/train/train-stop-mapper";
 
 export class TrainDataClient {
     private readonly baseUrl: URL;

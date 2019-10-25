@@ -1,13 +1,13 @@
-import {ApiKeyProvider} from "../utils/api-key-provider";
-import {ApiType} from "../models/api-type";
-import {FetchHelper} from "../utils/fetch-helper";
+import {ApiKeyProvider} from "../../utils/api-key-provider";
+import {ApiType} from "../../models/api-type";
+import {FetchHelper} from "../../utils/fetch-helper";
 import {TrainDataClient} from "./train-data-client";
-import {TrainStop} from "../models/train-stop";
-import {TrainStation} from "../models/train-station";
-import {TrainRoute} from "../models/train-route";
-import {TrainRouteProvider} from "../utils/train-route-provider";
-import {Prediction} from "../models/prediction";
-import {PredictionMapper} from "../mappers/prediction-mapper";
+import {TrainStop} from "../../models/train/train-stop";
+import {TrainStation} from "../../models/train/train-station";
+import {TrainRoute} from "../../models/train/train-route";
+import {TrainRouteProvider} from "../../utils/train-route-provider";
+import {TrainPrediction} from "../../models/train/train-prediction";
+import {TrainPredictionMapper} from "../../mappers/train/train-prediction-mapper";
 
 export class TrainTrackerClient {
     private readonly apiKey: string;
@@ -33,7 +33,7 @@ export class TrainTrackerClient {
         return this.trainDataClient.getStops(routeShortId, stationId);
     }
 
-    async getPredictionsForStation(routeId: string, stationId: string): Promise<Prediction[]> {
+    async getPredictionsForStation(routeId: string, stationId: string): Promise<TrainPrediction[]> {
         const url = new URL('ttarrivals.aspx', this.baseUrl);
         url.searchParams.set('key', this.apiKey);
         url.searchParams.set('outputType', 'json');
@@ -42,7 +42,7 @@ export class TrainTrackerClient {
         return this.getPredictions(url);
     }
 
-    async getPredictionsForStop(routeId: string, stopId: string): Promise<Prediction[]> {
+    async getPredictionsForStop(routeId: string, stopId: string): Promise<TrainPrediction[]> {
         const url = new URL('ttarrivals.aspx', this.baseUrl);
         url.searchParams.set('key', this.apiKey);
         url.searchParams.set('outputType', 'json');
@@ -54,13 +54,13 @@ export class TrainTrackerClient {
     private async getPredictions(url: URL) {
         return FetchHelper.fetch(url)
             .then((response: { [key: string]: any }) => {
-                let predictions: Prediction[] = [];
+                let predictions: TrainPrediction[] = [];
                 if (response.hasOwnProperty('ctatt')) {
                     let json: { [key: string]: any } = response['ctatt'];
                     if (json.hasOwnProperty('eta')) {
                         let predictionsJson: object[] = json['eta'];
-                        predictionsJson.forEach((predictionJson: { [key: string]: any }) => {
-                            let prediction = PredictionMapper.map(predictionJson);
+                        predictionsJson.forEach(predictionJson => {
+                            let prediction = TrainPredictionMapper.map(predictionJson);
                             if (prediction) {
                                 predictions.push(prediction);
                             }

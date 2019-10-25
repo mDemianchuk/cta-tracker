@@ -1,5 +1,5 @@
-import {TrainStation} from "../models/train-station";
-import {TrainRouteProvider} from "../utils/train-route-provider";
+import {TrainStation} from "../../models/train/train-station";
+import {TrainRouteProvider} from "../../utils/train-route-provider";
 
 export class TrainStationMapper {
     private constructor() {
