@@ -9,10 +9,11 @@ export class PredictionMapper {
         if (PredictionMapper.isValidStation(json)) {
             let isApproaching: boolean = json['isApp'] === '1';
             let isDelayed: boolean = json['isDly'] === '1';
+            let routeId: string = (json['rt'] as string).toLowerCase();
             prediction = new Prediction(
                 json['staNm'],
                 json['stpDe'],
-                json['rt'],
+                routeId,
                 json['destNm'],
                 json['prdt'],
                 json['arrT'],
