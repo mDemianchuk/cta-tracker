@@ -12,34 +12,30 @@ export class TrainDataClient {
     }
 
     async getStations(routeShortId: string): Promise<TrainStation[]> {
-        let stations: TrainStation[] = [];
         return this.getTrainData()
             .then((response: object[]) => {
+                let stations: TrainStation[] = [];
                 response.forEach(json => {
-                    if (this.isValidRoute(json, routeShortId)) {
-                        let station = TrainStationMapper.map(json);
-                        if (station) {
-                            stations.push(station);
-                        }
+                    let station = TrainStationMapper.map(json);
+                    if (station && this.isValidRoute(station, routeShortId)) {
+                        stations.push(station);
                     }
                 });
-                return new Promise(resolve => resolve(stations));
+                return stations;
             });
     }
 
     async getStops(routeShortId: string, stationId: string): Promise<TrainStop[]> {
-        let stops: TrainStop[] = [];
         return this.getTrainData()
             .then((response: object[]) => {
-                response.forEach((json: { [key: string]: any }) => {
-                    if (this.isValidStation(json, routeShortId, stationId)) {
-                        let stop = TrainStopMapper.map(json);
-                        if (stop) {
-                            stops.push(stop);
-                        }
+                let stops: TrainStop[] = [];
+                response.forEach(json => {
+                    let stop = TrainStopMapper.map(json);
+                    if (stop && this.isValidStation(stop, routeShortId, stationId)) {
+                        stops.push(stop);
                     }
                 });
-                return new Promise(resolve => resolve(stops));
+                return stops;
             });
     }
 
@@ -47,14 +43,12 @@ export class TrainDataClient {
         return FetchHelper.fetch<object[]>(this.baseUrl);
     }
 
-    private isValidRoute(json: { [key: string]: any }, routeShortId: string): boolean {
-        return json.hasOwnProperty(routeShortId)
-            && json[routeShortId] === true;
+    private isValidRoute(station: TrainStation, routeShortId: string): boolean {
+        return station.routeShortIds.includes(routeShortId);
     }
 
-    private isValidStation(json: { [key: string]: any }, routeShortId: string, stationId: string): boolean {
-        return this.isValidRoute(json, routeShortId)
-            && json.hasOwnProperty('map_id')
-            && json['map_id'] === stationId;
+    private isValidStation(stop: TrainStop, routeShortId: string, stationId: string): boolean {
+        return stop.routeShortIds.includes(routeShortId)
+            && stop.stationId === stationId;
     }
 }
