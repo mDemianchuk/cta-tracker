@@ -1,5 +1,5 @@
-import {TrainRoute} from "../models/train-route";
-import {TrainRouteId} from "../models/train-route-id";
+import {TrainRoute} from "../models/train/train-route";
+import {TrainRouteId} from "../models/train/train-route-id";
 
 export class TrainRouteProvider {
     private static readonly ROUTE_MAP: Map<string, TrainRoute> = new Map();

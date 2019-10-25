@@ -1,4 +1,4 @@
-export class Prediction {
+export class TrainPrediction {
     private readonly _stationName: string;
     private readonly _stopDescription: string;
     private readonly _routeId: string;
