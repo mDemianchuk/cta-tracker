@@ -31,7 +31,7 @@ export class BusTrackerClient {
                     if (bustimeResponse.hasOwnProperty('routes')) {
                         let routesJson: object[] = bustimeResponse['routes'];
                         routesJson.forEach(routeJson => {
-                            let route = BusRouteMapper.map(routeJson);
+                            let route = new BusRouteMapper().map(routeJson);
                             if (route) {
                                 routes.push(route);
                             }
@@ -55,7 +55,7 @@ export class BusTrackerClient {
                     if (bustimeResponse.hasOwnProperty('directions')) {
                         let directionsJson: object[] = bustimeResponse['directions'];
                         directionsJson.forEach(directionJson => {
-                            let direction = BusDirectionMapper.map(directionJson);
+                            let direction = new BusDirectionMapper().map(directionJson);
                             if (direction) {
                                 directions.push(direction);
                             }
@@ -80,7 +80,7 @@ export class BusTrackerClient {
                     if (bustimeResponse.hasOwnProperty('stops')) {
                         let stopsJson: object[] = bustimeResponse['stops'];
                         stopsJson.forEach(stopJson => {
-                            let stop = BusStopMapper.map(stopJson);
+                            let stop = new BusStopMapper().map(stopJson);
                             if (stop) {
                                 stops.push(stop);
                             }
@@ -105,7 +105,7 @@ export class BusTrackerClient {
                     if (bustimeResponse.hasOwnProperty('prd')) {
                         let predictionsJson: object[] = bustimeResponse['prd'];
                         predictionsJson.forEach(predictionJson => {
-                            let prediction = BusPredictionMapper.map(predictionJson);
+                            let prediction = new BusPredictionMapper().map(predictionJson);
                             if (prediction) {
                                 predictions.push(prediction);
                             }

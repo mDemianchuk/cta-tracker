@@ -1,18 +1,17 @@
 import {BusRoute} from "../../models/bus/bus-route";
+import {CtaMapper} from "../cta-mapper";
 
-export class BusRouteMapper {
-    private constructor() {
-    }
+export class BusRouteMapper implements CtaMapper<BusRoute> {
 
-    static map(json: { [key: string]: any }): BusRoute | undefined {
+    map(json: { [key: string]: any }): BusRoute | undefined {
         let route;
-        if (BusRouteMapper.isValidRoute(json)) {
+        if (this.isValid(json)) {
             route = new BusRoute(json['rt'], json['rtnm']);
         }
         return route;
     }
 
-    private static isValidRoute(json: { [key: string]: any }): boolean {
+    isValid(json: { [key: string]: any }): boolean {
         return json.hasOwnProperty('rt')
             && json.hasOwnProperty('rtnm');
     }

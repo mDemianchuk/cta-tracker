@@ -60,7 +60,7 @@ export class TrainTrackerClient {
                     if (json.hasOwnProperty('eta')) {
                         let predictionsJson: object[] = json['eta'];
                         predictionsJson.forEach(predictionJson => {
-                            let prediction = TrainPredictionMapper.map(predictionJson);
+                            let prediction = new TrainPredictionMapper().map(predictionJson);
                             if (prediction) {
                                 predictions.push(prediction);
                             }
