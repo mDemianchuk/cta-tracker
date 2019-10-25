@@ -29,6 +29,23 @@ export class TrainRouteProvider {
         return TrainRouteProvider.ROUTE_MAP.get(id);
     }
 
+    static getRouteShortIds(json: { [key: string]: any }): string[] {
+        let routeShortIds: string[] = Object.values(TrainRouteId);
+        routeShortIds = routeShortIds.filter((routeShortId => json.hasOwnProperty(routeShortId) && json[routeShortId]));
+        return routeShortIds;
+    }
+
+    static containsRoutes(json: { [key: string]: any }): boolean {
+        return json.hasOwnProperty(TrainRouteId.RED)
+            && json.hasOwnProperty(TrainRouteId.BLUE)
+            && json.hasOwnProperty(TrainRouteId.GREEN)
+            && json.hasOwnProperty(TrainRouteId.BROWN)
+            && json.hasOwnProperty(TrainRouteId.PURPLE)
+            && json.hasOwnProperty(TrainRouteId.YELLOW)
+            && json.hasOwnProperty(TrainRouteId.PINK_SHORT)
+            && json.hasOwnProperty(TrainRouteId.ORANGE_SHORT);
+    }
+
     private static initializeRoutes(): void {
         TrainRouteProvider.RED_LINE = new TrainRoute(TrainRouteId.RED, 'Red Line', TrainRouteId.RED);
         TrainRouteProvider.BLUE_LINE = new TrainRoute(TrainRouteId.BLUE, 'Blue Line', TrainRouteId.BLUE);
@@ -44,8 +61,10 @@ export class TrainRouteProvider {
         TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.BROWN, TrainRouteProvider.BROWN_LINE);
         TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.GREEN, TrainRouteProvider.GREEN_LINE);
         TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.ORANGE, TrainRouteProvider.ORANGE_LINE);
+        TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.ORANGE_SHORT, TrainRouteProvider.ORANGE_LINE);
         TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.PURPLE, TrainRouteProvider.PURPLE_LINE);
         TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.PINK, TrainRouteProvider.PINK_LINE);
+        TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.PINK_SHORT, TrainRouteProvider.PINK_LINE);
         TrainRouteProvider.ROUTE_MAP.set(TrainRouteId.YELLOW, TrainRouteProvider.YELLOW_LINE);
     }
 
