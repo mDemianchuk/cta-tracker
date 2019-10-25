@@ -8,6 +8,7 @@ import {TrainRoute} from "../../models/train/train-route";
 import {TrainRouteProvider} from "../../utils/train-route-provider";
 import {TrainPrediction} from "../../models/train/train-prediction";
 import {TrainPredictionMapper} from "../../mappers/train/train-prediction-mapper";
+import {ResponseProcessor} from "../../utils/response-processor";
 
 export class TrainTrackerClient {
     private readonly apiKey: string;
@@ -53,21 +54,8 @@ export class TrainTrackerClient {
 
     private async getPredictions(url: URL) {
         return FetchHelper.fetch(url)
-            .then((response: { [key: string]: any }) => {
-                let predictions: TrainPrediction[] = [];
-                if (response.hasOwnProperty('ctatt')) {
-                    let json: { [key: string]: any } = response['ctatt'];
-                    if (json.hasOwnProperty('eta')) {
-                        let predictionsJson: object[] = json['eta'];
-                        predictionsJson.forEach(predictionJson => {
-                            let prediction = new TrainPredictionMapper().map(predictionJson);
-                            if (prediction) {
-                                predictions.push(prediction);
-                            }
-                        });
-                    }
-                }
-                return predictions;
+            .then((json: { [key: string]: any }) => {
+                return ResponseProcessor.process(json, new TrainPredictionMapper(), 'ctatt', 'eta')
             });
     }
 }

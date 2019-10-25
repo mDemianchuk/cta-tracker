@@ -9,6 +9,7 @@ import {BusStop} from "../../models/bus/bus-stop";
 import {BusStopMapper} from "../../mappers/bus/bus-stop-mapper";
 import {BusPrediction} from "../../models/bus/bus-prediction";
 import {BusPredictionMapper} from "../../mappers/bus/bus-prediction-mapper";
+import {ResponseProcessor} from "../../utils/response-processor";
 
 export class BusTrackerClient {
     private readonly apiKey: string;
@@ -24,21 +25,8 @@ export class BusTrackerClient {
         url.searchParams.set('key', this.apiKey);
         url.searchParams.set('format', 'json');
         return FetchHelper.fetch(url)
-            .then((response: { [key: string]: any }) => {
-                let routes: BusRoute[] = [];
-                if (response.hasOwnProperty('bustime-response')) {
-                    let bustimeResponse: { [key: string]: any } = response['bustime-response'];
-                    if (bustimeResponse.hasOwnProperty('routes')) {
-                        let routesJson: object[] = bustimeResponse['routes'];
-                        routesJson.forEach(routeJson => {
-                            let route = new BusRouteMapper().map(routeJson);
-                            if (route) {
-                                routes.push(route);
-                            }
-                        });
-                    }
-                }
-                return routes;
+            .then((json: { [key: string]: any }) => {
+                return ResponseProcessor.process(json, new BusRouteMapper(), 'bustime-response', 'routes')
             });
     }
 
@@ -48,21 +36,8 @@ export class BusTrackerClient {
         url.searchParams.set('format', 'json');
         url.searchParams.set('rt', routeId);
         return FetchHelper.fetch(url)
-            .then((response: { [key: string]: any }) => {
-                let directions: BusDirection[] = [];
-                if (response.hasOwnProperty('bustime-response')) {
-                    let bustimeResponse: { [key: string]: any } = response['bustime-response'];
-                    if (bustimeResponse.hasOwnProperty('directions')) {
-                        let directionsJson: object[] = bustimeResponse['directions'];
-                        directionsJson.forEach(directionJson => {
-                            let direction = new BusDirectionMapper().map(directionJson);
-                            if (direction) {
-                                directions.push(direction);
-                            }
-                        });
-                    }
-                }
-                return directions;
+            .then((json: { [key: string]: any }) => {
+                return ResponseProcessor.process(json, new BusDirectionMapper(), 'bustime-response', 'directions')
             });
     }
 
@@ -73,21 +48,8 @@ export class BusTrackerClient {
         url.searchParams.set('rt', routeId);
         url.searchParams.set('dir', direction);
         return FetchHelper.fetch(url)
-            .then((response: { [key: string]: any }) => {
-                let stops: BusStop[] = [];
-                if (response.hasOwnProperty('bustime-response')) {
-                    let bustimeResponse: { [key: string]: any } = response['bustime-response'];
-                    if (bustimeResponse.hasOwnProperty('stops')) {
-                        let stopsJson: object[] = bustimeResponse['stops'];
-                        stopsJson.forEach(stopJson => {
-                            let stop = new BusStopMapper().map(stopJson);
-                            if (stop) {
-                                stops.push(stop);
-                            }
-                        });
-                    }
-                }
-                return stops;
+            .then((json: { [key: string]: any }) => {
+                return ResponseProcessor.process(json, new BusStopMapper(), 'bustime-response', 'stops')
             });
     }
 
@@ -98,21 +60,8 @@ export class BusTrackerClient {
         url.searchParams.set('rt', routeId);
         url.searchParams.set('stpid', stopId);
         return FetchHelper.fetch(url)
-            .then((response: { [key: string]: any }) => {
-                let predictions: BusPrediction[] = [];
-                if (response.hasOwnProperty('bustime-response')) {
-                    let bustimeResponse: { [key: string]: any } = response['bustime-response'];
-                    if (bustimeResponse.hasOwnProperty('prd')) {
-                        let predictionsJson: object[] = bustimeResponse['prd'];
-                        predictionsJson.forEach(predictionJson => {
-                            let prediction = new BusPredictionMapper().map(predictionJson);
-                            if (prediction) {
-                                predictions.push(prediction);
-                            }
-                        });
-                    }
-                }
-                return predictions;
+            .then((json: { [key: string]: any }) => {
+                return ResponseProcessor.process(json, new BusPredictionMapper(), 'bustime-response', 'prd')
             });
     }
 }
