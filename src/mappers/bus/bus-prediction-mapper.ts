@@ -7,29 +7,19 @@ export class BusPredictionMapper implements CtaMapper<BusPrediction> {
         let prediction;
         if (this.isValid(json)) {
             prediction = new BusPrediction(
-                json['tmstmp'],
-                json['typ'],
-                json['stpnm'],
-                json['stpid'],
                 json['vid'],
-                json['rt'],
-                json['rtdir'],
                 json['des'],
-                json['prdtm']
+                json['prdtm'],
+                json['tmstmp']
             );
         }
         return prediction;
     }
 
     isValid(json: { [key: string]: any }): boolean {
-        return json.hasOwnProperty('tmstmp')
-            && json.hasOwnProperty('typ')
-            && json.hasOwnProperty('stpnm')
-            && json.hasOwnProperty('stpid')
-            && json.hasOwnProperty('vid')
-            && json.hasOwnProperty('rt')
-            && json.hasOwnProperty('rtdir')
+        return json.hasOwnProperty('vid')
             && json.hasOwnProperty('des')
-            && json.hasOwnProperty('prdtm');
+            && json.hasOwnProperty('prdtm')
+            && json.hasOwnProperty('tmstmp');
     }
 }

@@ -6,7 +6,7 @@ export class BusStopMapper implements CtaMapper<BusStop> {
     map(json: { [key: string]: any }): BusStop | undefined {
         let route;
         if (this.isValid(json)) {
-            route = new BusStop(json['stpid'], json['stpnm'],);
+            route = new BusStop(json['stpid'], json['stpnm']);
         }
         return route;
     }
