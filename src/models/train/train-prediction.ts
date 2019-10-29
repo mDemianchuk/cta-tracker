@@ -1,22 +1,19 @@
+import {TrainRoute} from "./train-route";
+
 export class TrainPrediction {
     private readonly _stationName: string;
     private readonly _stopDescription: string;
-    private readonly _routeId: string;
     private readonly _destination: string;
     private readonly _generatedAt: string;
     private readonly _approachingAt: string;
-    private readonly _isApproaching: boolean;
-    private readonly _isDelayed: boolean;
+    private _route: TrainRoute;
 
-    constructor(stationName: string, stopDescription: string, routeId: string, destination: string, generatedAt: string, approachingAt: string, isApproaching: boolean, isDelayed: boolean) {
+    constructor(stationName: string, stopDescription: string, destination: string, generatedAt: string, approachingAt: string) {
         this._stationName = stationName;
         this._stopDescription = stopDescription;
-        this._routeId = routeId;
         this._destination = destination;
         this._generatedAt = generatedAt;
         this._approachingAt = approachingAt;
-        this._isApproaching = isApproaching;
-        this._isDelayed = isDelayed;
     }
 
     get stationName(): string {
@@ -25,10 +22,6 @@ export class TrainPrediction {
 
     get stopDescription(): string {
         return this._stopDescription;
-    }
-
-    get routeId(): string {
-        return this._routeId;
     }
 
     get destination(): string {
@@ -43,11 +36,11 @@ export class TrainPrediction {
         return this._approachingAt;
     }
 
-    get isApproaching(): boolean {
-        return this._isApproaching;
+    get route(): TrainRoute {
+        return this._route;
     }
 
-    get isDelayed(): boolean {
-        return this._isDelayed;
+    set route(value: TrainRoute) {
+        this._route = value;
     }
 }

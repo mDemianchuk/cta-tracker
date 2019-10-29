@@ -3,6 +3,7 @@ import {TrainStation} from "../../models/train/train-station";
 import {TrainStop} from "../../models/train/train-stop";
 import {TrainStationMapper} from "../../mappers/train/train-station-mapper";
 import {TrainStopMapper} from "../../mappers/train/train-stop-mapper";
+import {TrainRoute} from "../../models/train/train-route";
 
 export class TrainDataClient {
     private readonly baseUrl: URL;
@@ -38,11 +39,15 @@ export class TrainDataClient {
     }
 
     private isValidRoute(station: TrainStation, routeShortId: string): boolean {
-        return station.routeShortIds.includes(routeShortId);
+        return station.routes
+            .map((route: TrainRoute) => route.shortId)
+            .includes(routeShortId);
     }
 
     private isValidStation(stop: TrainStop, routeShortId: string, stationId: string): boolean {
-        return stop.routeShortIds.includes(routeShortId)
-            && stop.stationId === stationId;
+        return stop.stationId === stationId
+            && stop.routes
+                .map((route: TrainRoute) => route.shortId)
+                .includes(routeShortId);
     }
 }

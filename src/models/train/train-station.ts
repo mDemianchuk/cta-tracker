@@ -1,12 +1,14 @@
+import {TrainRoute} from "./train-route";
+
 export class TrainStation {
     private readonly _id: string;
     private readonly _name: string;
-    private readonly _routeShortIds: string[];
+    private readonly _routes: TrainRoute[];
 
-    constructor(id: string, name: string, routeShortIds: string[]) {
+    constructor(id: string, name: string, routes: TrainRoute[]) {
         this._id = id;
         this._name = name;
-        this._routeShortIds = routeShortIds;
+        this._routes = routes;
     }
 
     get id(): string {
@@ -17,7 +19,7 @@ export class TrainStation {
         return this._name;
     }
 
-    get routeShortIds(): string[] {
-        return this._routeShortIds;
+    get routes(): TrainRoute[] {
+        return this._routes;
     }
 }
