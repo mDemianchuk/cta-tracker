@@ -22,17 +22,16 @@ export class TrainRouteProvider {
         return Array.from(TrainRouteProvider.ROUTE_MAP.values());
     }
 
-    static getRoute(id: string): TrainRoute | undefined {
+    static getRoute(shortId: string): TrainRoute | undefined {
         if (!TrainRouteProvider.isInitialized()) {
             TrainRouteProvider.initializeRoutes();
         }
-        return TrainRouteProvider.ROUTE_MAP.get(id);
+        return TrainRouteProvider.ROUTE_MAP.get(shortId);
     }
 
     static getRouteShortIds(json: { [key: string]: any }): string[] {
-        let routeShortIds: string[] = Object.values(TrainRouteId);
-        routeShortIds = routeShortIds.filter((routeShortId => json.hasOwnProperty(routeShortId) && json[routeShortId]));
-        return routeShortIds;
+        return Object.values(TrainRouteId)
+            .filter((routeShortId: string) => json.hasOwnProperty(routeShortId) && json[routeShortId]);
     }
 
     static containsRoutes(json: { [key: string]: any }): boolean {

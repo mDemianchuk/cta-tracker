@@ -15,12 +15,10 @@ export class TrainDataClient {
         return this.getTrainData()
             .then((response: object[]) => {
                 let stationMap: Map<string, TrainStation> = new Map();
-                response.forEach(json => {
-                    let station = new TrainStationMapper().map(json);
-                    if (station && this.isValidRoute(station, routeShortId)) {
-                        stationMap.set(station.id, station);
-                    }
-                });
+                let mapper: TrainStationMapper = new TrainStationMapper();
+                response.map((json: { [key: string]: string }) => mapper.map(json))
+                    .filter((station: TrainStation | undefined) => station && this.isValidRoute(station, routeShortId))
+                    .forEach((station: TrainStation) => stationMap.set(station.id, station));
                 return Array.from(stationMap.values());
             });
     }
@@ -28,14 +26,10 @@ export class TrainDataClient {
     async getStops(routeShortId: string, stationId: string): Promise<TrainStop[]> {
         return this.getTrainData()
             .then((response: object[]) => {
-                let stops: TrainStop[] = [];
-                response.forEach(json => {
-                    let stop = new TrainStopMapper().map(json);
-                    if (stop && this.isValidStation(stop, routeShortId, stationId)) {
-                        stops.push(stop);
-                    }
-                });
-                return stops;
+                let mapper: TrainStopMapper = new TrainStopMapper();
+                return response.map((json: { [key: string]: string }) => mapper.map(json))
+                    .filter((stop: TrainStop | undefined) => stop && this.isValidStation(stop, routeShortId, stationId))
+                    .map((stop: TrainStop) => stop);
             });
     }
 

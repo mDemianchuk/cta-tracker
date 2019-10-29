@@ -11,12 +11,9 @@ export class ResponseProcessor {
                 let outerJson: { [key: string]: any } = response[outerProperty];
                 if (outerJson.hasOwnProperty(innerProperty)) {
                     let innerJson: object[] = outerJson[innerProperty];
-                    innerJson.forEach(entityJson => {
-                        let entity = entityMapper.map(entityJson);
-                        if (entity) {
-                            entities.push(entity);
-                        }
-                    });
+                    entities = innerJson.map((entityJson: { [key: string]: string }) => entityMapper.map(entityJson))
+                        .filter((entity: T | undefined) => entity)
+                        .map((entity: T) => entity);
                 }
             }
             resolve(entities);
