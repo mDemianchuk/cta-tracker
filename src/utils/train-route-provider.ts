@@ -29,9 +29,8 @@ export class TrainRouteProvider {
         return TrainRouteProvider.ROUTE_MAP.get(shortId);
     }
 
-    static getRouteShortIds(json: { [key: string]: any }): string[] {
-        return Object.values(TrainRouteId)
-            .filter((routeShortId: string) => json.hasOwnProperty(routeShortId) && json[routeShortId]);
+    static getRouteIds(): string[] {
+        return Object.values(TrainRouteId);
     }
 
     static containsRoutes(json: { [key: string]: any }): boolean {
