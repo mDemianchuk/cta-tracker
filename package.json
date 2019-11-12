@@ -3,9 +3,11 @@
   "displayName": "CtaTracker",
   "version": "1.0.0",
   "description": "A CTA tracker mobile application",
-  "main": "index.js",
+  "main": "www/js/index.js",
   "scripts": {
-    "compile-ts": "tsc"
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node ."
   },
   "author": "Mykola Demianchuk",
   "license": "Apache-2.0",
@@ -13,7 +15,6 @@
     "@types/node": "^12.11.2",
     "@types/node-fetch": "^2.5.2",
     "cordova-android": "^8.1.0",
-    "dotenv": "^8.2.0",
     "node-fetch": "^2.6.0",
     "typescript": "^3.6.4"
   },
