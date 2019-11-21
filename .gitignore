@@ -19,8 +19,7 @@ gen/
 out/
 release/
 node_modules/
-www/js/
-src/test.ts
+www/*.js
 
 # Gradle files
 .gradle/
