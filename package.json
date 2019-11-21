@@ -7,15 +7,12 @@
   "scripts": {
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node ."
+    "start": "cordova emulate"
   },
   "author": "Mykola Demianchuk",
   "license": "Apache-2.0",
   "dependencies": {
-    "@types/node": "^12.11.2",
-    "@types/node-fetch": "^2.5.2",
     "cordova-android": "^8.1.0",
-    "node-fetch": "^2.6.0",
     "typescript": "^3.6.4"
   },
   "devDependencies": {
