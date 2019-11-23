@@ -6,8 +6,24 @@
     <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
     <title>CTA Tracker</title>
 </head>
-    <body>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="index.js"></script>
-    </body>
+<body>
+<ons-navigator id="navigator">
+    <ons-page>
+        <ons-toolbar>
+            <div class="center">Routes</div>
+            <div class="right">
+                <ons-toolbar-button id="refresh">
+                    <ons-icon icon="fa-redo"></ons-icon>
+                </ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+        <ons-tabbar swipeable position="bottom">
+            <ons-tab page="templates/train.html" icon="fa-subway" active></ons-tab>
+            <ons-tab page="templates/bus.html" icon="fa-bus"></ons-tab>
+        </ons-tabbar>
+    </ons-page>
+</ons-navigator>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</body>
 </html>
