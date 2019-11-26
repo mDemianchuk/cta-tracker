@@ -21,13 +21,14 @@ export class TrainTrackerView {
                 const routeList: Element = document.querySelector('#train-route-list')!;
                 routes.forEach((route: Route) => {
                     const listItem = ons.createElement(`
-                    <ons-list-item id="${route.id}">
+                    <ons-list-item tappable modifier="chevron" id="${route.id}">
                         ${route.name}
                     </ons-list-item>
                     `) as Node;
                     listItem.addEventListener('click', async () => {
                         await PageHelper.changePage('templates/train-station.html')
-                            .then(() => this.fetchStations(route.id))
+                            .then(() => PageHelper.updateTitle(route.name, '#train-station-title'))
+                            .then(() => this.fetchStations(route.id));
                     });
                     routeList.appendChild(listItem);
                 });
@@ -40,7 +41,7 @@ export class TrainTrackerView {
                 const stationList: Element = document.querySelector('#train-station-list')!;
                 stations.forEach((station: Station) => {
                     const listItem = ons.createElement(`
-                    <ons-list-item id="${station.id}">
+                    <ons-list-item tappable modifier="chevron" id="${station.id}">
                         ${station.name}
                     </ons-list-item>
                 `) as Node;

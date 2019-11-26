@@ -22,13 +22,14 @@ export class BusTrackerView {
                 const routeList: Element = document.querySelector('#bus-route-list')!;
                 routes.forEach((route: Route) => {
                     const listItem = ons.createElement(`
-                        <ons-list-item id="${route.id}">
+                        <ons-list-item tappable modifier="chevron" id="${route.id}">
                             ${route.name}
                         </ons-list-item>
                     `) as Node;
                     listItem.addEventListener('click', async () => {
                         await PageHelper.changePage('templates/bus-stop.html')
-                            .then(() => this.fetchStops(route.id))
+                            .then(() => PageHelper.updateTitle(`Route ${route.id}`, '#bus-stop-title'))
+                            .then(() => this.fetchStops(route.id));
                     });
                     routeList.appendChild(listItem);
                 });
@@ -45,7 +46,7 @@ export class BusTrackerView {
                         .then((stops: Stop[]) => {
                             stops.forEach((stop: Stop) => {
                                 const listItem = ons.createElement(`
-                                    <ons-list-item id="${stop.id}">
+                                    <ons-list-item tappable modifier="chevron" id="${stop.id}">
                                         ${stop.name}
                                     </ons-list-item>
                                 `) as Node;
