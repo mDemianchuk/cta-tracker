@@ -12,48 +12,81 @@ export class BusTrackerView {
         this.service = new BusTrackerService();
     }
 
-    async init(): Promise<void> {
-        return this.fetchRoutes();
-    }
-
-    private async fetchRoutes(): Promise<void> {
+    async renderRoutes(): Promise<void> {
         this.service.getRoutes()
             .then((routes: Route[]) => {
-                const routeList: Element = document.querySelector('#bus-route-list')!;
+                const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
                 routes.forEach((route: Route) => {
                     const listItem = ons.createElement(`
-                        <ons-list-item tappable modifier="chevron" id="${route.id}">
+                        <ons-list-item tappable modifier="chevron">
                             ${route.name}
                         </ons-list-item>
-                    `) as Node;
+                    `) as ons.OnsListItemElement;
                     listItem.addEventListener('click', async () => {
-                        await PageHelper.changePage('templates/bus-stop.html')
-                            .then(() => PageHelper.updateTitle(`Route ${route.id}`, '#bus-stop-title'))
-                            .then(() => this.fetchStops(route.id));
+                        await PageHelper.pushPage(
+                            'templates/stop.html',
+                            '#bus-navigator',
+                            {
+                                data: {
+                                    title: `Route ${route.id}`,
+                                    pageId: 'bus-stop',
+                                    routeId: route.id,
+                                    directionId: 0
+                                }
+                            }
+                        );
                     });
                     routeList.appendChild(listItem);
                 });
             });
     }
 
-    private async fetchStops(routeId: string): Promise<void> {
-        this.service.getDirections(routeId)
-            .then((directions: Direction[]) => {
-                if (directions.length > 0) {
-                    let direction: string = directions[0].direction;
-                    const stopList: Element = document.querySelector('#bus-stop-list')!;
-                    this.service.getStops(routeId, direction)
-                        .then((stops: Stop[]) => {
-                            stops.forEach((stop: Stop) => {
-                                const listItem = ons.createElement(`
-                                    <ons-list-item tappable modifier="chevron" id="${stop.id}">
-                                        ${stop.name}
-                                    </ons-list-item>
-                                `) as Node;
-                                stopList.appendChild(listItem);
+    async renderStops(page: ons.OnsPageElement): Promise<void> {
+        if (page.data && page.data.routeId && page.data.directionId !== undefined) {
+            const routeId: string = page.data.routeId;
+            const directionId: number = page.data.directionId;
+            const oppositeDirectionId: number = Math.abs(directionId - 1);
+
+            this.service.getDirections(routeId)
+                .then((directions: Direction[]) => {
+                    const directionToDisplay: string = directions[directionId].direction;
+                    const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                    directions.forEach((direction: Direction) => {
+                        this.service.getStops(routeId, directionToDisplay)
+                            .then((stops: Stop[]) => {
+                                stops.forEach((stop: Stop) => {
+                                    const listItem = ons.createElement(`
+                                        <ons-list-item tappable modifier="chevron" class="${direction.direction}">
+                                            ${stop.name}
+                                        </ons-list-item>
+                                    `) as ons.OnsListItemElement;
+                                    stopList.appendChild(listItem);
+                                });
                             });
+                    });
+
+                    if (directions.length > 1) {
+                        const toolbarTitle = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+                        const toggleButton = ons.createElement(`
+                            <ons-toolbar-button icon="fa-exchange"></ons-toolbar-button>
+                        `) as ons.OnsToolbarButtonElement;
+                        toggleButton.addEventListener('click', async () => {
+                            await PageHelper.replacePage(
+                                'templates/stop.html',
+                                '#bus-navigator',
+                                {
+                                    data: {
+                                        title: `Route ${routeId}`,
+                                        pageId: 'bus-stop',
+                                        routeId: routeId,
+                                        directionId: oppositeDirectionId
+                                    }
+                                }
+                            );
                         });
-                }
-            });
+                        toolbarTitle.appendChild(toggleButton);
+                    }
+                });
+        }
     }
 }

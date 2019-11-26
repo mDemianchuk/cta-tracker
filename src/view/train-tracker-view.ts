@@ -11,42 +11,49 @@ export class TrainTrackerView {
         this.service = new TrainTrackerService();
     }
 
-    async init(): Promise<void> {
-        return this.fetchRoutes();
-    }
-
-    private async fetchRoutes(): Promise<void> {
+    async renderRoutes(): Promise<void> {
         this.service.getRoutes()
             .then((routes: Route[]) => {
-                const routeList: Element = document.querySelector('#train-route-list')!;
+                const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
                 routes.forEach((route: Route) => {
                     const listItem = ons.createElement(`
-                    <ons-list-item tappable modifier="chevron" id="${route.id}">
-                        ${route.name}
-                    </ons-list-item>
-                    `) as Node;
+                        <ons-list-item tappable modifier="chevron">
+                            ${route.name}
+                        </ons-list-item>
+                    `) as ons.OnsListItemElement;
                     listItem.addEventListener('click', async () => {
-                        await PageHelper.changePage('templates/train-station.html')
-                            .then(() => PageHelper.updateTitle(route.name, '#train-station-title'))
-                            .then(() => this.fetchStations(route.id));
+                        await PageHelper.pushPage(
+                            'templates/stop.html',
+                            '#train-navigator',
+                            {
+                                data: {
+                                    title: route.name,
+                                    pageId: 'train-station',
+                                    routeId: route.id
+                                }
+                            }
+                        );
                     });
                     routeList.appendChild(listItem);
                 });
             });
     }
 
-    private async fetchStations(routeId: string): Promise<void> {
-        this.service.getStations(routeId)
-            .then((stations: Station[]) => {
-                const stationList: Element = document.querySelector('#train-station-list')!;
-                stations.forEach((station: Station) => {
-                    const listItem = ons.createElement(`
-                    <ons-list-item tappable modifier="chevron" id="${station.id}">
-                        ${station.name}
-                    </ons-list-item>
-                `) as Node;
-                    stationList.appendChild(listItem);
+    async renderStations(page: ons.OnsPageElement): Promise<void> {
+        if (page.data && page.data.routeId) {
+            const routeId: string = page.data.routeId;
+            this.service.getStations(routeId)
+                .then((stations: Station[]) => {
+                    const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                    stations.forEach((station: Station) => {
+                        const listItem = ons.createElement(`
+                            <ons-list-item tappable modifier="chevron">
+                                ${station.name}
+                            </ons-list-item>
+                        `) as ons.OnsListItemElement;
+                        stationList.appendChild(listItem);
+                    });
                 });
-            });
+        }
     }
 }
