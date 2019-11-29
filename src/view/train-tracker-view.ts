@@ -16,20 +16,23 @@ export class TrainTrackerView {
             .then((routes: Route[]) => {
                 const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
                 routes.forEach((route: Route) => {
+                    const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
                     const listItem = ons.createElement(`
-                        <ons-list-item tappable modifier="chevron">
-                            ${route.name}
+                        <ons-list-item tappable modifier="longdivider chevron">
+                          <div class="left"></div>
+                          <div class="center">${route.name}</div>
                         </ons-list-item>
                     `) as ons.OnsListItemElement;
+                    listItem.querySelector('.left')!.appendChild(thumbnail);
                     listItem.addEventListener('click', async () => {
                         await PageHelper.pushPage(
                             'templates/stop.html',
                             '#train-navigator',
                             {
                                 data: {
-                                    title: route.name,
                                     pageId: 'train-station',
-                                    routeId: route.id
+                                    routeId: route.id,
+                                    routeName: route.name
                                 }
                             }
                         );
@@ -40,8 +43,17 @@ export class TrainTrackerView {
     }
 
     async renderStations(page: ons.OnsPageElement): Promise<void> {
-        if (page.data && page.data.routeId) {
+        if (page.data && page.data.routeId && page.data.routeName) {
             const routeId: string = page.data.routeId;
+            const routeName: string = page.data.routeName;
+
+            // init title
+            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+            const toolbarTitle = ons.createElement(`
+                        <span>${routeName} Stations</span>
+                    `) as ons.OnsToolbarElement;
+            toolbarCenter.appendChild(toolbarTitle);
+
             return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
                     const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;

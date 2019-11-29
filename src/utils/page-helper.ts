@@ -1,4 +1,5 @@
 import * as ons from "onsenui";
+import {ColorHelper} from "./color-helper";
 
 export class PageHelper {
     private static tabMap: Map<number, string> = new Map([[0, "train"], [1, "bus"]]);
@@ -43,6 +44,19 @@ export class PageHelper {
         return page.querySelector('ons-toolbar') as ons.OnsToolbarElement;
     }
 
+    static createThumbnail(routeId: string): ons.OnsPageElement {
+        const color: string | undefined = ColorHelper.getColorCodeByRouteId(routeId);
+        if (color) {
+            return ons.createElement(`
+                <span class="route-thumbnail" style="background: ${color};"></span>
+            `) as ons.OnsPageElement;
+        } else {
+            return ons.createElement(`
+                <span class="route-thumbnail">${routeId}</span>
+            `) as ons.OnsPageElement;
+        }
+    }
+
     static addSpinner(page: ons.OnsPageElement) {
         const spinner = ons.createElement(`
             <ons-progress-circular 
@@ -64,12 +78,12 @@ export class PageHelper {
         page.removeChild(spinner);
     }
 
-    static async pushPage(page: string, navigatorId: string, options: object): Promise<HTMLElement> {
+    static async pushPage(page: string, navigatorId: string, options: object = {}): Promise<HTMLElement> {
         const navigator = document.querySelector(navigatorId) as ons.OnsNavigatorElement;
         return navigator.bringPageTop(page, options);
     }
 
-    static async replacePage(page: string, navigatorId: string, options: object): Promise<HTMLElement> {
+    static async replacePage(page: string, navigatorId: string, options: object = {}): Promise<HTMLElement> {
         const navigator = document.querySelector(navigatorId) as ons.OnsNavigatorElement;
         return navigator.replacePage(page, options);
     }
