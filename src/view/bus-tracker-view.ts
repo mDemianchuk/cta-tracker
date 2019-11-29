@@ -51,18 +51,28 @@ export class BusTrackerView {
 
             return this.service.getDirections(routeId)
                 .then((directions: Direction[]) => {
-                    const directionToDisplay: string = directions[directionId].direction;
 
                     // init title
                     const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
                     const toolbarTitle = ons.createElement(`
-                        <span>Route ${routeId} - ${directionToDisplay}</span>
+                        <span>Route ${routeId} Stops</span>
                     `) as ons.OnsToolbarElement;
                     toolbarCenter.appendChild(toolbarTitle);
 
+                    // init stop list header
+                    const directionToDisplay: string = directions[directionId].direction;
+                    const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                    const stopListHeader = ons.createElement(`
+                        <ons-list-header>${directionToDisplay}</ons-list-header>
+                    `) as ons.OnsListItemElement;
+                    stopList.appendChild(stopListHeader);
+
+                    // add toggle button
                     if (directions.length > 1) {
                         const toggleButton = ons.createElement(`
-                            <ons-toolbar-button icon="fa-exchange"></ons-toolbar-button>
+                            <ons-fab position="bottom right">
+                                <ons-icon icon="fa-exchange"></ons-icon>
+                            </ons-fab>
                         `) as ons.OnsToolbarButtonElement;
                         toggleButton.addEventListener('click', async () => {
                             await PageHelper.replacePage(
@@ -77,23 +87,21 @@ export class BusTrackerView {
                                 }
                             );
                         });
-                        toolbarCenter.appendChild(toggleButton);
+                        page.appendChild(toggleButton);
                     }
 
-                    const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                    directions.forEach((direction: Direction) => {
-                        this.service.getStops(routeId, directionToDisplay)
-                            .then((stops: Stop[]) => {
-                                stops.forEach((stop: Stop) => {
-                                    const listItem = ons.createElement(`
-                                        <ons-list-item tappable modifier="chevron" class="${direction.direction}">
-                                            ${stop.name}
-                                        </ons-list-item>
-                                    `) as ons.OnsListItemElement;
-                                    stopList.appendChild(listItem);
-                                });
+                    // render stops
+                    this.service.getStops(routeId, directionToDisplay)
+                        .then((stops: Stop[]) => {
+                            stops.forEach((stop: Stop) => {
+                                const listItem = ons.createElement(`
+                                    <ons-list-item tappable modifier="chevron">
+                                        ${stop.name}
+                                    </ons-list-item>
+                                `) as ons.OnsListItemElement;
+                                stopList.appendChild(listItem);
                             });
-                    });
+                        });
                 });
         } else {
             return Promise.reject('No routeId or directionId provided');
