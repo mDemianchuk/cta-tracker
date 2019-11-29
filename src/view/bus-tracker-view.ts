@@ -49,22 +49,6 @@ export class BusTrackerView {
 
             return this.service.getDirections(routeId)
                 .then((directions: Direction[]) => {
-                    const directionToDisplay: string = directions[directionId].direction;
-                    const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                    directions.forEach((direction: Direction) => {
-                        this.service.getStops(routeId, directionToDisplay)
-                            .then((stops: Stop[]) => {
-                                stops.forEach((stop: Stop) => {
-                                    const listItem = ons.createElement(`
-                                        <ons-list-item tappable modifier="chevron" class="${direction.direction}">
-                                            ${stop.name}
-                                        </ons-list-item>
-                                    `) as ons.OnsListItemElement;
-                                    stopList.appendChild(listItem);
-                                });
-                            });
-                    });
-
                     if (directions.length > 1) {
                         const toolbarTitle = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
                         const toggleButton = ons.createElement(`
@@ -86,6 +70,22 @@ export class BusTrackerView {
                         });
                         toolbarTitle.appendChild(toggleButton);
                     }
+
+                    const directionToDisplay: string = directions[directionId].direction;
+                    const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                    directions.forEach((direction: Direction) => {
+                        this.service.getStops(routeId, directionToDisplay)
+                            .then((stops: Stop[]) => {
+                                stops.forEach((stop: Stop) => {
+                                    const listItem = ons.createElement(`
+                                        <ons-list-item tappable modifier="chevron" class="${direction.direction}">
+                                            ${stop.name}
+                                        </ons-list-item>
+                                    `) as ons.OnsListItemElement;
+                                    stopList.appendChild(listItem);
+                                });
+                            });
+                    });
                 });
         } else {
             return Promise.reject('No routeId or directionId provided');
