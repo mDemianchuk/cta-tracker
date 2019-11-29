@@ -21,6 +21,8 @@ function initEventListeners(): void {
     // on page initialization
     document.addEventListener('init', async event => {
         const page = event.target as ons.OnsPageElement;
+        PageHelper.addSpinner(page);
+
         const toolbar = PageHelper.getTabToolbarByPage(page);
         const toolbarTitle = toolbar.querySelector('.center') as ons.OnsToolbarElement;
 
@@ -48,6 +50,7 @@ function initEventListeners(): void {
                 await initTrainStations(page);
             }
         }
+        PageHelper.removeSpinner(page);
     });
 
     // // on tab change
@@ -60,20 +63,20 @@ function initEventListeners(): void {
     // });
 }
 
-async function initTrainRoutes() {
-    await trainTrackerView.renderRoutes();
+async function initTrainRoutes(): Promise<void> {
+    return trainTrackerView.renderRoutes();
 }
 
-async function initBusRoutes() {
-    await busTrackerView.renderRoutes();
+async function initBusRoutes(): Promise<void> {
+    return busTrackerView.renderRoutes();
 }
 
-async function initBusStops(page: ons.OnsPageElement) {
-    await busTrackerView.renderStops(page);
+async function initBusStops(page: ons.OnsPageElement): Promise<void> {
+    return busTrackerView.renderStops(page);
 }
 
-async function initTrainStations(page: ons.OnsPageElement) {
-    await trainTrackerView.renderStations(page);
+async function initTrainStations(page: ons.OnsPageElement): Promise<void> {
+    return trainTrackerView.renderStations(page);
 }
 
 function renderMainPage(): Promise<HTMLElement> {

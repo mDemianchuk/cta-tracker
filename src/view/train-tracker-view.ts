@@ -12,7 +12,7 @@ export class TrainTrackerView {
     }
 
     async renderRoutes(): Promise<void> {
-        this.service.getRoutes()
+        return this.service.getRoutes()
             .then((routes: Route[]) => {
                 const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
                 routes.forEach((route: Route) => {
@@ -42,7 +42,7 @@ export class TrainTrackerView {
     async renderStations(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId) {
             const routeId: string = page.data.routeId;
-            this.service.getStations(routeId)
+            return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
                     const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;
                     stations.forEach((station: Station) => {
@@ -54,6 +54,8 @@ export class TrainTrackerView {
                         stationList.appendChild(listItem);
                     });
                 });
+        } else {
+            return Promise.reject('No routeId provided');
         }
     }
 }
