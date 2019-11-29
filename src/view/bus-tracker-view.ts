@@ -13,7 +13,7 @@ export class BusTrackerView {
     }
 
     async renderRoutes(): Promise<void> {
-        this.service.getRoutes()
+        return this.service.getRoutes()
             .then((routes: Route[]) => {
                 const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
                 routes.forEach((route: Route) => {
@@ -47,7 +47,7 @@ export class BusTrackerView {
             const directionId: number = page.data.directionId;
             const oppositeDirectionId: number = Math.abs(directionId - 1);
 
-            this.service.getDirections(routeId)
+            return this.service.getDirections(routeId)
                 .then((directions: Direction[]) => {
                     const directionToDisplay: string = directions[directionId].direction;
                     const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
@@ -87,6 +87,8 @@ export class BusTrackerView {
                         toolbarTitle.appendChild(toggleButton);
                     }
                 });
+        } else {
+            return Promise.reject('No routeId or directionId provided');
         }
     }
 }

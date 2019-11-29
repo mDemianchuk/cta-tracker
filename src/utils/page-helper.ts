@@ -43,6 +43,27 @@ export class PageHelper {
         return page.querySelector('ons-toolbar') as ons.OnsToolbarElement;
     }
 
+    static addSpinner(page: ons.OnsPageElement) {
+        const spinner = ons.createElement(`
+            <ons-progress-circular 
+                style="
+                    margin: 0;
+                    position: absolute;
+                    top: 20%;
+                    left: 50%;
+                    -ms-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);"
+                indeterminate>
+            </ons-progress-circular>
+        `) as ons.OnsProgressCircularElement;
+        page.appendChild(spinner);
+    }
+
+    static removeSpinner(page: ons.OnsPageElement) {
+        const spinner = page.querySelector('ons-progress-circular') as ons.OnsProgressCircularElement;
+        page.removeChild(spinner);
+    }
+
     static async pushPage(page: string, navigatorId: string, options: object): Promise<HTMLElement> {
         const navigator = document.querySelector(navigatorId) as ons.OnsNavigatorElement;
         return navigator.bringPageTop(page, options);
