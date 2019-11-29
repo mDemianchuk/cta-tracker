@@ -1,0 +1,11 @@
+.route-thumbnail {
+    width: 45px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    background: #73AD21;
+    border-radius: 10px;
+}

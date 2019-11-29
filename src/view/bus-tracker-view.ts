@@ -17,18 +17,20 @@ export class BusTrackerView {
             .then((routes: Route[]) => {
                 const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
                 routes.forEach((route: Route) => {
+                    const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
                     const listItem = ons.createElement(`
-                        <ons-list-item tappable modifier="chevron">
-                            ${route.name}
+                        <ons-list-item tappable modifier="longdivider chevron">
+                          <div class="left"></div>
+                          <div class="center">${route.name}</div>
                         </ons-list-item>
                     `) as ons.OnsListItemElement;
+                    listItem.querySelector('.left')!.appendChild(thumbnail);
                     listItem.addEventListener('click', async () => {
                         await PageHelper.pushPage(
                             'templates/stop.html',
                             '#bus-navigator',
                             {
                                 data: {
-                                    title: `Route ${route.id}`,
                                     pageId: 'bus-stop',
                                     routeId: route.id,
                                     directionId: 0
@@ -49,8 +51,16 @@ export class BusTrackerView {
 
             return this.service.getDirections(routeId)
                 .then((directions: Direction[]) => {
+                    const directionToDisplay: string = directions[directionId].direction;
+
+                    // init title
+                    const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+                    const toolbarTitle = ons.createElement(`
+                        <span>Route ${routeId} - ${directionToDisplay}</span>
+                    `) as ons.OnsToolbarElement;
+                    toolbarCenter.appendChild(toolbarTitle);
+
                     if (directions.length > 1) {
-                        const toolbarTitle = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
                         const toggleButton = ons.createElement(`
                             <ons-toolbar-button icon="fa-exchange"></ons-toolbar-button>
                         `) as ons.OnsToolbarButtonElement;
@@ -60,7 +70,6 @@ export class BusTrackerView {
                                 '#bus-navigator',
                                 {
                                     data: {
-                                        title: `Route ${routeId}`,
                                         pageId: 'bus-stop',
                                         routeId: routeId,
                                         directionId: oppositeDirectionId
@@ -68,10 +77,9 @@ export class BusTrackerView {
                                 }
                             );
                         });
-                        toolbarTitle.appendChild(toggleButton);
+                        toolbarCenter.appendChild(toggleButton);
                     }
 
-                    const directionToDisplay: string = directions[directionId].direction;
                     const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
                     directions.forEach((direction: Direction) => {
                         this.service.getStops(routeId, directionToDisplay)
