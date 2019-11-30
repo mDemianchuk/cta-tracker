@@ -1,5 +1,6 @@
 import * as ons from "onsenui";
 import {ColorHelper} from "./color-helper";
+import {TimeHelper} from "./time-helper";
 
 export class PageHelper {
     private static tabMap: Map<number, string> = new Map([[0, "train"], [1, "bus"]]);
@@ -42,6 +43,14 @@ export class PageHelper {
 
     static getTabToolbarByPage(page: HTMLElement): ons.OnsToolbarElement {
         return page.querySelector('ons-toolbar') as ons.OnsToolbarElement;
+    }
+
+    static getDisplayTime(timestamp: string): string {
+        const remainingTimeInMinutes: number = TimeHelper.getRemainingTimeInMinutes(timestamp);
+        if (remainingTimeInMinutes < 1) {
+            return 'Appr.';
+        }
+        return `${remainingTimeInMinutes} m`;
     }
 
     static createThumbnail(routeId: string): ons.OnsPageElement {
