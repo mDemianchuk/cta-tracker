@@ -128,13 +128,10 @@ export class TrainTrackerView {
                             if (predictions.length > 0) {
                                 // init stop list header
                                 const directionToDisplay: string = predictions[0].direction;
-                                const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                                const predictionListHeader = ons.createElement(`
-                                    <ons-list-header>${directionToDisplay}</ons-list-header>
-                                `) as ons.OnsListItemElement;
-                                predictionList.appendChild(predictionListHeader);
+                                PageHelper.addListHeader(page, directionToDisplay);
 
                                 // render predictions
+                                const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
                                 predictions.forEach((prediction: Prediction) => {
                                     const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
                                     const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;

@@ -67,6 +67,14 @@ export class PageHelper {
         `) as ons.OnsFabElement;
     }
 
+    static addListHeader(page: ons.OnsPageElement, header: string): void {
+        const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+        const stopListHeader = ons.createElement(`
+            <ons-list-header>${header}</ons-list-header>
+        `) as ons.OnsListItemElement;
+        stopList.appendChild(stopListHeader);
+    }
+
     static addToolbarTitle(page: ons.OnsPageElement, title: string): void {
         const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
         const toolbarTitle = ons.createElement(`

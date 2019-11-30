@@ -59,11 +59,7 @@ export class BusTrackerView {
                         .then((stops: Stop[]) => {
 
                             // init stop list header
-                            const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                            const stopListHeader = ons.createElement(`
-                                <ons-list-header>${directionToDisplay}</ons-list-header>
-                            `) as ons.OnsListItemElement;
-                            stopList.appendChild(stopListHeader);
+                            PageHelper.addListHeader(page, directionToDisplay);
 
                             // add toggle button
                             if (directions.length > 1) {
@@ -86,6 +82,7 @@ export class BusTrackerView {
                             }
 
                             // render stops
+                            const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
                             stops.forEach((stop: Stop) => {
                                 const listItem = ons.createElement(`
                                     <ons-list-item tappable modifier="longdivider chevron">
@@ -155,13 +152,10 @@ export class BusTrackerView {
                     if (predictions.length > 0) {
                         // init stop list header
                         const directionToDisplay: string = predictions[0].direction;
-                        const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                        const predictionListHeader = ons.createElement(`
-                            <ons-list-header>${directionToDisplay}</ons-list-header>
-                        `) as ons.OnsListItemElement;
-                        predictionList.appendChild(predictionListHeader);
+                        PageHelper.addListHeader(page, directionToDisplay);
 
                         // render predictions
+                        const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
                         predictions.forEach((prediction: Prediction) => {
                             const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
                             const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
