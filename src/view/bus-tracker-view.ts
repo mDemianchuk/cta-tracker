@@ -57,11 +57,7 @@ export class BusTrackerView {
             const oppositeDirectionId: number = Math.abs(directionId - 1);
 
             // init title
-            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-            const toolbarTitle = ons.createElement(`
-                <span>${routeName}</span>
-            `) as ons.OnsToolbarElement;
-            toolbarCenter.appendChild(toolbarTitle);
+            PageHelper.addToolbarTitle(page, routeName);
 
             return this.service.getDirections(routeId)
                 .then((directions: Direction[]) => {
@@ -80,11 +76,7 @@ export class BusTrackerView {
 
                             // add toggle button
                             if (directions.length > 1) {
-                                const toggleButton = ons.createElement(`
-                                    <ons-fab position="bottom right">
-                                        <ons-icon icon="fa-exchange"></ons-icon>
-                                    </ons-fab>
-                                `) as ons.OnsToolbarButtonElement;
+                                const toggleButton = PageHelper.createToggleFab();
                                 toggleButton.addEventListener('click', async () => {
                                     await PageHelper.replacePage(
                                         'templates/stop.html',
@@ -143,19 +135,11 @@ export class BusTrackerView {
             const oppositeDirectionStopId: string | null = page.data.oppositeDirectionStopId;
 
             // init title
-            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-            const toolbarTitle = ons.createElement(`
-                <span>${stopName}</span>
-            `) as ons.OnsToolbarElement;
-            toolbarCenter.appendChild(toolbarTitle);
+            PageHelper.addToolbarTitle(page, stopName);
 
             // add toggle button
             if (oppositeDirectionStopId) {
-                const toggleButton = ons.createElement(`
-                <ons-fab position="bottom right">
-                    <ons-icon icon="fa-exchange"></ons-icon>
-                </ons-fab>
-            `) as ons.OnsToolbarButtonElement;
+                const toggleButton = PageHelper.createToggleFab();
                 toggleButton.addEventListener('click', async () => {
                     await PageHelper.replacePage(
                         'templates/prediction.html',
@@ -188,7 +172,7 @@ export class BusTrackerView {
 
                         // render predictions
                         predictions.forEach((prediction: Prediction) => {
-                            const timeToDisplay: string = PageHelper.getDisplayTime(prediction.arrivalTime);
+                            const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
                             const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
                             const listItem = ons.createElement(`
                                 <ons-list-item modifier="longdivider">

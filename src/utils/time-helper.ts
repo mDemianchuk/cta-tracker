@@ -2,7 +2,7 @@ export class TimeHelper {
     private constructor() {
     }
 
-    static getRemainingTimeInMinutes(timestamp: string): number {
+    static getDisplayTime(timestamp: string): string {
         const currentTime: Date = new Date();
 
         let time: Date = new Date(timestamp);
@@ -15,6 +15,11 @@ export class TimeHelper {
 
         // @ts-ignore
         const timeDifference: number = time - currentTime;
-        return Math.round(timeDifference / 60000);
+        const remainingTimeInMinutes = Math.round(timeDifference / 60000);
+
+        if (remainingTimeInMinutes < 1) {
+            return 'Appr.';
+        }
+        return `${remainingTimeInMinutes} m`;
     }
 }

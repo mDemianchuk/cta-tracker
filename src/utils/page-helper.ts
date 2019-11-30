@@ -45,12 +45,20 @@ export class PageHelper {
         return page.querySelector('ons-toolbar') as ons.OnsToolbarElement;
     }
 
-    static getDisplayTime(timestamp: string): string {
-        const remainingTimeInMinutes: number = TimeHelper.getRemainingTimeInMinutes(timestamp);
-        if (remainingTimeInMinutes < 1) {
-            return 'Appr.';
-        }
-        return `${remainingTimeInMinutes} m`;
+    static createToggleFab(): ons.OnsFabElement {
+        return ons.createElement(`
+            <ons-fab position="bottom right">
+                <ons-icon icon="fa-exchange"></ons-icon>
+            </ons-fab>
+        `) as ons.OnsFabElement;
+    }
+
+    static addToolbarTitle(page: ons.OnsPageElement, title: string): void {
+        const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+        const toolbarTitle = ons.createElement(`
+            <span>${title}</span>
+        `) as ons.OnsToolbarElement;
+        toolbarCenter.appendChild(toolbarTitle);
     }
 
     static createThumbnail(routeId: string): ons.OnsPageElement {

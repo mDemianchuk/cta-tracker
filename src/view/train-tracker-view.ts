@@ -5,6 +5,7 @@ import {Station} from "../models/station";
 import {PageHelper} from "../utils/page-helper";
 import {Prediction} from "../models/prediction";
 import {Stop} from "../models/stop";
+import {TimeHelper} from "../utils/time-helper";
 
 export class TrainTrackerView {
     private readonly service: TrainTrackerService;
@@ -53,11 +54,7 @@ export class TrainTrackerView {
             const routeName: string = page.data.routeName;
 
             // init title
-            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-            const toolbarTitle = ons.createElement(`
-                <span>${routeName}</span>
-            `) as ons.OnsToolbarElement;
-            toolbarCenter.appendChild(toolbarTitle);
+            PageHelper.addToolbarTitle(page, routeName);
 
             return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
@@ -106,11 +103,7 @@ export class TrainTrackerView {
 
 
             // init title
-            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-            const toolbarTitle = ons.createElement(`
-                <span>${stationName}</span>
-            `) as ons.OnsToolbarElement;
-            toolbarCenter.appendChild(toolbarTitle);
+            PageHelper.addToolbarTitle(page, stationName);
 
             return this.service.getStops(routeId, stationId)
                 .then((stops: Stop[]) => {
@@ -119,11 +112,7 @@ export class TrainTrackerView {
 
                     // add toggle button
                     if (stopToDisplay.oppositeDirectionStopId) {
-                        const toggleButton = ons.createElement(`
-                            <ons-fab position="bottom right">
-                                <ons-icon icon="fa-exchange"></ons-icon>
-                            </ons-fab>
-                        `) as ons.OnsToolbarButtonElement;
+                        const toggleButton = PageHelper.createToggleFab();
                         toggleButton.addEventListener('click', async () => {
                             await PageHelper.replacePage(
                                 'templates/prediction.html',
@@ -156,7 +145,7 @@ export class TrainTrackerView {
 
                                 // render predictions
                                 predictions.forEach((prediction: Prediction) => {
-                                    const timeToDisplay: string = PageHelper.getDisplayTime(prediction.arrivalTime);
+                                    const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
                                     const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
                                     const listItem = ons.createElement(`
                                         <ons-list-item modifier="longdivider">
