@@ -71,5 +71,5 @@ async function initTrainPredictions(page: ons.OnsPageElement): Promise<void> {
 }
 
 function renderMainPage(): Promise<HTMLElement> {
-    return PageHelper.pushPage('templates/main.html', '#main-navigator');
+    return PageHelper.pushPage('html/main.html', '#main-navigator');
 }

@@ -21,17 +21,9 @@ export class TrainTrackerView {
 
                 // render routes
                 routes.forEach((route: Route) => {
-                    const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
-                    const listItem = ons.createElement(`
-                        <ons-list-item tappable modifier="longdivider chevron">
-                          <div class="left"></div>
-                          <div class="center">${route.name}</div>
-                        </ons-list-item>
-                    `) as ons.OnsListItemElement;
-                    listItem.querySelector('.left')!.appendChild(thumbnail);
-                    listItem.addEventListener('click', async () => {
+                    const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
-                            'templates/stop.html',
+                            'html/stop.html',
                             '#train-navigator',
                             {
                                 data: {
@@ -53,11 +45,7 @@ export class TrainTrackerView {
             const routeName: string = page.data.routeName;
 
             // init title
-            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-            const toolbarTitle = ons.createElement(`
-                <span>${routeName}</span>
-            `) as ons.OnsToolbarElement;
-            toolbarCenter.appendChild(toolbarTitle);
+            PageHelper.addToolbarTitle(page, routeName);
 
             return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
@@ -66,14 +54,9 @@ export class TrainTrackerView {
 
                     // render stations
                     stations.forEach((station: Station) => {
-                        const listItem = ons.createElement(`
-                            <ons-list-item tappable modifier="longdivider chevron">
-                                ${station.name}
-                            </ons-list-item>
-                        `) as ons.OnsListItemElement;
-                        listItem.addEventListener('click', async () => {
+                        const listItem = PageHelper.createStopListElement(station.name, async () => {
                             await PageHelper.pushPage(
-                                'templates/prediction.html',
+                                'html/prediction.html',
                                 '#train-navigator',
                                 {
                                     data: {
@@ -91,7 +74,7 @@ export class TrainTrackerView {
                     });
                 });
         } else {
-            return Promise.reject('No routeId provided');
+            return Promise.reject('One or more attributes of the page data is missing');
         }
     }
 
@@ -104,13 +87,8 @@ export class TrainTrackerView {
             const stopToDisplayId: number = page.data.stopToDisplayId;
             const oppositeDirectionStopToDisplayId: number = Math.abs(stopToDisplayId - 1);
 
-
             // init title
-            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-            const toolbarTitle = ons.createElement(`
-                <span>${stationName}</span>
-            `) as ons.OnsToolbarElement;
-            toolbarCenter.appendChild(toolbarTitle);
+            PageHelper.addToolbarTitle(page, stationName);
 
             return this.service.getStops(routeId, stationId)
                 .then((stops: Stop[]) => {
@@ -119,14 +97,9 @@ export class TrainTrackerView {
 
                     // add toggle button
                     if (stopToDisplay.oppositeDirectionStopId) {
-                        const toggleButton = ons.createElement(`
-                            <ons-fab position="bottom right">
-                                <ons-icon icon="fa-exchange"></ons-icon>
-                            </ons-fab>
-                        `) as ons.OnsToolbarButtonElement;
-                        toggleButton.addEventListener('click', async () => {
+                        const toggleButton = PageHelper.createToggleFab(async () => {
                             await PageHelper.replacePage(
-                                'templates/prediction.html',
+                                'html/prediction.html',
                                 '#train-navigator',
                                 {
                                     data: {
@@ -148,30 +121,12 @@ export class TrainTrackerView {
                             if (predictions.length > 0) {
                                 // init stop list header
                                 const directionToDisplay: string = predictions[0].direction;
-                                const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                                const predictionListHeader = ons.createElement(`
-                                    <ons-list-header>${directionToDisplay}</ons-list-header>
-                                `) as ons.OnsListItemElement;
-                                predictionList.appendChild(predictionListHeader);
+                                PageHelper.addListHeader(page, directionToDisplay);
 
                                 // render predictions
+                                const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
                                 predictions.forEach((prediction: Prediction) => {
-                                    const timeToDisplay: string = PageHelper.getDisplayTime(prediction.arrivalTime);
-                                    const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
-                                    const listItem = ons.createElement(`
-                                        <ons-list-item modifier="longdivider">
-                                            <div class="left"></div>
-                                            <div class="center">
-                                              <span class="list-item__title">${routeName}</span>
-                                              <span class="list-item__subtitle">to ${prediction.destination}</span>
-                                            </div>
-                                            <div class="right">
-                                                <ons-icon icon="fa-subway" style="padding-right: 5px"></ons-icon>
-                                                 ${prediction.vehicleId}
-                                            </div>
-                                        </ons-list-item>
-                                    `) as ons.OnsListItemElement;
-                                    listItem.querySelector('.left')!.appendChild(thumbnail);
+                                    const listItem: ons.OnsListItemElement = PageHelper.createPredictionListElement(prediction, routeName, 'fa-subway');
                                     predictionList.appendChild(listItem);
                                 });
                             } else {
@@ -180,7 +135,7 @@ export class TrainTrackerView {
                         });
                 });
         } else {
-            return Promise.reject('No routeId or stopId provided');
+            return Promise.reject('One or more attributes of the page data is missing');
         }
     }
 }

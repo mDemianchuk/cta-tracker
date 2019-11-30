@@ -1,67 +1,91 @@
 import * as ons from "onsenui";
 import {ColorHelper} from "./color-helper";
 import {TimeHelper} from "./time-helper";
+import {Route} from "../models/route";
+import {Prediction} from "../models/prediction";
 
 export class PageHelper {
-    private static tabMap: Map<number, string> = new Map([[0, "train"], [1, "bus"]]);
-
     private constructor() {
     }
 
-    private static getActiveTabIndex(): number {
-        const tabBar = document.querySelector('ons-tabbar') as ons.OnsTabbarElement;
-        return tabBar.getActiveTabIndex();
+    static createRouteListElement(route: Route, eventListener: EventListener): ons.OnsListItemElement {
+        const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
+        const listItem = ons.createElement(`
+            <ons-list-item tappable modifier="longdivider chevron">
+              <div class="left"></div>
+              <div class="center">${route.name}</div>
+            </ons-list-item>
+        `) as ons.OnsListItemElement;
+        listItem.querySelector('.left')!.appendChild(thumbnail);
+        listItem.addEventListener('click', eventListener);
+        return listItem;
     }
 
-    static getNextTabIndex(): number {
-        const activeTabIndex = PageHelper.getActiveTabIndex();
-        return Math.abs(activeTabIndex - 1);
+    static createStopListElement(name: string, eventListener: EventListener): ons.OnsListItemElement {
+        const listItem = ons.createElement(`
+            <ons-list-item tappable modifier="longdivider chevron">
+                ${name}
+            </ons-list-item>
+        `) as ons.OnsListItemElement;
+        listItem.addEventListener('click', eventListener);
+        return listItem;
     }
 
-    private static getTabTypeByIndex(index: number): string {
-        return PageHelper.tabMap.get(index)!;
+    static createPredictionListElement(prediction: Prediction, routeName: string, icon: string): ons.OnsListItemElement {
+        const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
+        const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
+        const listItem = ons.createElement(`
+            <ons-list-item modifier="longdivider">
+                <div class="left"></div>
+                <div class="center">
+                  <span class="list-item__title">${routeName}</span>
+                  <span class="list-item__subtitle">to ${prediction.destination}</span>
+                </div>
+                <div class="right">
+                    <ons-icon class="prediction_icon" icon="${icon}"></ons-icon>
+                    ${prediction.vehicleId}
+                </div>
+            </ons-list-item>
+        `) as ons.OnsListItemElement;
+        listItem.querySelector('.left')!.appendChild(thumbnail);
+        return listItem;
     }
 
-    private static getTabNavigatorByIndex(index: number): ons.OnsNavigatorElement {
-        const tabType: string = PageHelper.getTabTypeByIndex(index);
-        return PageHelper.getTabNavigatorByType(tabType);
+    static createToggleFab(eventListener: EventListener): ons.OnsFabElement {
+        const toggleFab = ons.createElement(`
+            <ons-fab position="bottom right">
+                <ons-icon icon="fa-exchange"></ons-icon>
+            </ons-fab>
+        `) as ons.OnsFabElement;
+        toggleFab.addEventListener('click', eventListener);
+        return toggleFab;
     }
 
-    static getTabNavigatorByType(tabType: string): ons.OnsNavigatorElement {
-        return document.querySelector(`#${tabType}-navigator`) as ons.OnsNavigatorElement;
+    static addListHeader(page: ons.OnsPageElement, header: string): void {
+        const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+        const stopListHeader = ons.createElement(`
+            <ons-list-header>${header}</ons-list-header>
+        `) as ons.OnsListItemElement;
+        stopList.appendChild(stopListHeader);
     }
 
-    static getMainToolbar(): ons.OnsToolbarElement {
-        return document.querySelector('#main-toolbar') as ons.OnsToolbarElement;
-    }
-
-    static getTabToolbarByIndex(index: number): ons.OnsToolbarElement {
-        const tabNavigator = PageHelper.getTabNavigatorByIndex(index);
-        const topPage = tabNavigator.topPage;
-        return PageHelper.getTabToolbarByPage(topPage);
-    }
-
-    static getTabToolbarByPage(page: HTMLElement): ons.OnsToolbarElement {
-        return page.querySelector('ons-toolbar') as ons.OnsToolbarElement;
-    }
-
-    static getDisplayTime(timestamp: string): string {
-        const remainingTimeInMinutes: number = TimeHelper.getRemainingTimeInMinutes(timestamp);
-        if (remainingTimeInMinutes < 1) {
-            return 'Appr.';
-        }
-        return `${remainingTimeInMinutes} m`;
+    static addToolbarTitle(page: ons.OnsPageElement, title: string): void {
+        const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+        const toolbarTitle = ons.createElement(`
+            <span>${title}</span>
+        `) as ons.OnsToolbarElement;
+        toolbarCenter.appendChild(toolbarTitle);
     }
 
     static createThumbnail(routeId: string): ons.OnsPageElement {
         const color: string | undefined = ColorHelper.getColorCodeByRouteId(routeId);
         if (color) {
             return ons.createElement(`
-                <span class="route-thumbnail" style="background: ${color};"></span>
+                <span class="route_thumbnail" style="background: ${color};"></span>
             `) as ons.OnsPageElement;
         } else {
             return ons.createElement(`
-                <span class="route-thumbnail">${routeId}</span>
+                <span class="route_thumbnail">${routeId}</span>
             `) as ons.OnsPageElement;
         }
     }

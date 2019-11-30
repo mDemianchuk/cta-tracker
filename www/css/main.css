@@ -1,4 +1,4 @@
-.route-thumbnail {
+.route_thumbnail {
     width: 45px;
     height: 40px;
     line-height: 40px;
@@ -8,4 +8,8 @@
     text-align: center;
     background: #73AD21;
     border-radius: 10px;
+}
+
+.prediction_icon {
+    padding-right: 5px;
 }
