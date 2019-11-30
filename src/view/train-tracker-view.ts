@@ -14,7 +14,10 @@ export class TrainTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
+
                 const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
+
+                // render routes
                 routes.forEach((route: Route) => {
                     const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
                     const listItem = ons.createElement(`
@@ -56,7 +59,10 @@ export class TrainTrackerView {
 
             return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
+
                     const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;
+
+                    // render stations
                     stations.forEach((station: Station) => {
                         const listItem = ons.createElement(`
                             <ons-list-item tappable modifier="chevron">
