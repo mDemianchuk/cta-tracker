@@ -63,8 +63,7 @@ export class BusTrackerView {
 
                             // add toggle button
                             if (directions.length > 1) {
-                                const toggleButton = PageHelper.createToggleFab();
-                                toggleButton.addEventListener('click', async () => {
+                                const toggleButton = PageHelper.createToggleFab(async () => {
                                     await PageHelper.replacePage(
                                         'templates/stop.html',
                                         '#bus-navigator',
@@ -127,8 +126,7 @@ export class BusTrackerView {
 
             // add toggle button
             if (oppositeDirectionStopId) {
-                const toggleButton = PageHelper.createToggleFab();
-                toggleButton.addEventListener('click', async () => {
+                const toggleButton = PageHelper.createToggleFab(async () => {
                     await PageHelper.replacePage(
                         'templates/prediction.html',
                         '#bus-navigator',

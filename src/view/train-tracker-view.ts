@@ -103,8 +103,7 @@ export class TrainTrackerView {
 
                     // add toggle button
                     if (stopToDisplay.oppositeDirectionStopId) {
-                        const toggleButton = PageHelper.createToggleFab();
-                        toggleButton.addEventListener('click', async () => {
+                        const toggleButton = PageHelper.createToggleFab(async () => {
                             await PageHelper.replacePage(
                                 'templates/prediction.html',
                                 '#train-navigator',

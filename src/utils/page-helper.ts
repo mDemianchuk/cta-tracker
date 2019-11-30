@@ -59,12 +59,14 @@ export class PageHelper {
         return listItem;
     }
 
-    static createToggleFab(): ons.OnsFabElement {
-        return ons.createElement(`
+    static createToggleFab(eventListener: EventListener): ons.OnsFabElement {
+        const toggleFab = ons.createElement(`
             <ons-fab position="bottom right">
                 <ons-icon icon="fa-exchange"></ons-icon>
             </ons-fab>
         `) as ons.OnsFabElement;
+        toggleFab.addEventListener('click', eventListener);
+        return toggleFab;
     }
 
     static addListHeader(page: ons.OnsPageElement, header: string): void {
