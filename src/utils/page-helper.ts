@@ -2,6 +2,7 @@ import * as ons from "onsenui";
 import {ColorHelper} from "./color-helper";
 import {TimeHelper} from "./time-helper";
 import {Route} from "../models/route";
+import {Prediction} from "../models/prediction";
 
 export class PageHelper {
     private static tabMap: Map<number, string> = new Map([[0, "train"], [1, "bus"]]);
@@ -69,6 +70,26 @@ export class PageHelper {
         return listItem;
     }
 
+    static createPredictionListElement(prediction: Prediction, routeName: string, icon: string): ons.OnsListItemElement {
+        const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
+        const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
+        const listItem = ons.createElement(`
+            <ons-list-item modifier="longdivider">
+                <div class="left"></div>
+                <div class="center">
+                  <span class="list-item__title">${routeName}</span>
+                  <span class="list-item__subtitle">to ${prediction.destination}</span>
+                </div>
+                <div class="right">
+                    <ons-icon class="prediction_icon" icon="${icon}"></ons-icon>
+                    ${prediction.vehicleId}
+                </div>
+            </ons-list-item>
+        `) as ons.OnsListItemElement;
+        listItem.querySelector('.left')!.appendChild(thumbnail);
+        return listItem;
+    }
+
     static createToggleFab(eventListener: EventListener): ons.OnsFabElement {
         const toggleFab = ons.createElement(`
             <ons-fab position="bottom right">
@@ -99,11 +120,11 @@ export class PageHelper {
         const color: string | undefined = ColorHelper.getColorCodeByRouteId(routeId);
         if (color) {
             return ons.createElement(`
-                <span class="route-thumbnail" style="background: ${color};"></span>
+                <span class="route_thumbnail" style="background: ${color};"></span>
             `) as ons.OnsPageElement;
         } else {
             return ons.createElement(`
-                <span class="route-thumbnail">${routeId}</span>
+                <span class="route_thumbnail">${routeId}</span>
             `) as ons.OnsPageElement;
         }
     }

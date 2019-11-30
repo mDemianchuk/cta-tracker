@@ -5,7 +5,6 @@ import {Station} from "../models/station";
 import {PageHelper} from "../utils/page-helper";
 import {Prediction} from "../models/prediction";
 import {Stop} from "../models/stop";
-import {TimeHelper} from "../utils/time-helper";
 
 export class TrainTrackerView {
     private readonly service: TrainTrackerService;
@@ -17,7 +16,10 @@ export class TrainTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
+
                 const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
+
+                // render routes
                 routes.forEach((route: Route) => {
                     const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
@@ -72,7 +74,7 @@ export class TrainTrackerView {
                     });
                 });
         } else {
-            return Promise.reject('No routeId provided');
+            return Promise.reject('One or more attributes of the page data is missing');
         }
     }
 
@@ -125,22 +127,7 @@ export class TrainTrackerView {
                                 // render predictions
                                 const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
                                 predictions.forEach((prediction: Prediction) => {
-                                    const timeToDisplay: string = TimeHelper.getDisplayTime(prediction.arrivalTime);
-                                    const thumbnail = PageHelper.createThumbnail(timeToDisplay) as ons.OnsPageElement;
-                                    const listItem = ons.createElement(`
-                                        <ons-list-item modifier="longdivider">
-                                            <div class="left"></div>
-                                            <div class="center">
-                                              <span class="list-item__title">${routeName}</span>
-                                              <span class="list-item__subtitle">to ${prediction.destination}</span>
-                                            </div>
-                                            <div class="right">
-                                                <ons-icon icon="fa-subway" style="padding-right: 5px"></ons-icon>
-                                                 ${prediction.vehicleId}
-                                            </div>
-                                        </ons-list-item>
-                                    `) as ons.OnsListItemElement;
-                                    listItem.querySelector('.left')!.appendChild(thumbnail);
+                                    const listItem: ons.OnsListItemElement = PageHelper.createPredictionListElement(prediction, routeName, 'fa-subway');
                                     predictionList.appendChild(listItem);
                                 });
                             } else {
@@ -149,7 +136,7 @@ export class TrainTrackerView {
                         });
                 });
         } else {
-            return Promise.reject('No routeId or stopId provided');
+            return Promise.reject('One or more attributes of the page data is missing');
         }
     }
 }
