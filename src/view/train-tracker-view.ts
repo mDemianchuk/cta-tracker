@@ -17,20 +17,11 @@ export class TrainTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
-
                 const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
 
                 // render routes
                 routes.forEach((route: Route) => {
-                    const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
-                    const listItem = ons.createElement(`
-                        <ons-list-item tappable modifier="longdivider chevron">
-                          <div class="left"></div>
-                          <div class="center">${route.name}</div>
-                        </ons-list-item>
-                    `) as ons.OnsListItemElement;
-                    listItem.querySelector('.left')!.appendChild(thumbnail);
-                    listItem.addEventListener('click', async () => {
+                    const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
                             'templates/stop.html',
                             '#train-navigator',

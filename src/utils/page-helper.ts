@@ -1,6 +1,7 @@
 import * as ons from "onsenui";
 import {ColorHelper} from "./color-helper";
 import {TimeHelper} from "./time-helper";
+import {Route} from "../models/route";
 
 export class PageHelper {
     private static tabMap: Map<number, string> = new Map([[0, "train"], [1, "bus"]]);
@@ -43,6 +44,19 @@ export class PageHelper {
 
     static getTabToolbarByPage(page: HTMLElement): ons.OnsToolbarElement {
         return page.querySelector('ons-toolbar') as ons.OnsToolbarElement;
+    }
+
+    static createRouteListElement(route: Route, eventListener: EventListener): ons.OnsListItemElement {
+        const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
+        const listItem = ons.createElement(`
+            <ons-list-item tappable modifier="longdivider chevron">
+              <div class="left"></div>
+              <div class="center">${route.name}</div>
+            </ons-list-item>
+        `) as ons.OnsListItemElement;
+        listItem.querySelector('.left')!.appendChild(thumbnail);
+        listItem.addEventListener('click', eventListener);
+        return listItem;
     }
 
     static createToggleFab(): ons.OnsFabElement {
