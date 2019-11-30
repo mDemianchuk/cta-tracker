@@ -59,6 +59,16 @@ export class PageHelper {
         return listItem;
     }
 
+    static createStopListElement(name: string, eventListener: EventListener): ons.OnsListItemElement {
+        const listItem = ons.createElement(`
+            <ons-list-item tappable modifier="longdivider chevron">
+                ${name}
+            </ons-list-item>
+        `) as ons.OnsListItemElement;
+        listItem.addEventListener('click', eventListener);
+        return listItem;
+    }
+
     static createToggleFab(eventListener: EventListener): ons.OnsFabElement {
         const toggleFab = ons.createElement(`
             <ons-fab position="bottom right">

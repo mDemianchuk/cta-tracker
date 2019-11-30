@@ -18,8 +18,6 @@ export class BusTrackerView {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
                 const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
-
-                // render routes
                 routes.forEach((route: Route) => {
                     const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
@@ -83,12 +81,7 @@ export class BusTrackerView {
                             // render stops
                             const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
                             stops.forEach((stop: Stop) => {
-                                const listItem = ons.createElement(`
-                                    <ons-list-item tappable modifier="longdivider chevron">
-                                        ${stop.name}
-                                    </ons-list-item>
-                                `) as ons.OnsListItemElement;
-                                listItem.addEventListener('click', async () => {
+                                const listItem = PageHelper.createStopListElement(stop.name, async () => {
                                     await PageHelper.pushPage(
                                         'templates/prediction.html',
                                         '#bus-navigator',

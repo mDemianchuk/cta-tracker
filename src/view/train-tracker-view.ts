@@ -18,8 +18,6 @@ export class TrainTrackerView {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
                 const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
-
-                // render routes
                 routes.forEach((route: Route) => {
                     const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
@@ -54,12 +52,7 @@ export class TrainTrackerView {
 
                     // render stations
                     stations.forEach((station: Station) => {
-                        const listItem = ons.createElement(`
-                            <ons-list-item tappable modifier="longdivider chevron">
-                                ${station.name}
-                            </ons-list-item>
-                        `) as ons.OnsListItemElement;
-                        listItem.addEventListener('click', async () => {
+                        const listItem = PageHelper.createStopListElement(station.name, async () => {
                             await PageHelper.pushPage(
                                 'templates/prediction.html',
                                 '#train-navigator',
