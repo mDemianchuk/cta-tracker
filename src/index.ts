@@ -23,6 +23,7 @@ function initEventListeners(): void {
         PageHelper.addSpinner(page);
 
         if (!page.matches('#main-page')) {
+
             // render page content
             if (page.matches('#train-route')) {
                 await initTrainRoutes();

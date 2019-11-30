@@ -16,7 +16,10 @@ export class BusTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
+
                 const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
+
+                // render routes
                 routes.forEach((route: Route) => {
                     const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
                     const listItem = ons.createElement(`
@@ -50,50 +53,52 @@ export class BusTrackerView {
             const directionId: number = page.data.directionId;
             const oppositeDirectionId: number = Math.abs(directionId - 1);
 
+            // init title
+            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+            const toolbarTitle = ons.createElement(`
+                <span>Route ${routeId} Stops</span>
+            `) as ons.OnsToolbarElement;
+            toolbarCenter.appendChild(toolbarTitle);
+
             return this.service.getDirections(routeId)
                 .then((directions: Direction[]) => {
 
-                    // init title
-                    const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-                    const toolbarTitle = ons.createElement(`
-                        <span>Route ${routeId} Stops</span>
-                    `) as ons.OnsToolbarElement;
-                    toolbarCenter.appendChild(toolbarTitle);
-
-                    // init stop list header
                     const directionToDisplay: string = directions[directionId].direction;
-                    const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                    const stopListHeader = ons.createElement(`
-                        <ons-list-header>${directionToDisplay}</ons-list-header>
-                    `) as ons.OnsListItemElement;
-                    stopList.appendChild(stopListHeader);
 
-                    // add toggle button
-                    if (directions.length > 1) {
-                        const toggleButton = ons.createElement(`
-                            <ons-fab position="bottom right">
-                                <ons-icon icon="fa-exchange"></ons-icon>
-                            </ons-fab>
-                        `) as ons.OnsToolbarButtonElement;
-                        toggleButton.addEventListener('click', async () => {
-                            await PageHelper.replacePage(
-                                'templates/stop.html',
-                                '#bus-navigator',
-                                {
-                                    data: {
-                                        pageId: 'bus-stop',
-                                        routeId: routeId,
-                                        directionId: oppositeDirectionId
-                                    }
-                                }
-                            );
-                        });
-                        page.appendChild(toggleButton);
-                    }
-
-                    // render stops
-                    this.service.getStops(routeId, directionToDisplay)
+                    return this.service.getStops(routeId, directionToDisplay)
                         .then((stops: Stop[]) => {
+
+                            // init stop list header
+                            const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                            const stopListHeader = ons.createElement(`
+                                <ons-list-header>${directionToDisplay}</ons-list-header>
+                            `) as ons.OnsListItemElement;
+                            stopList.appendChild(stopListHeader);
+
+                            // add toggle button
+                            if (directions.length > 1) {
+                                const toggleButton = ons.createElement(`
+                                    <ons-fab position="bottom right">
+                                        <ons-icon icon="fa-exchange"></ons-icon>
+                                    </ons-fab>
+                                `) as ons.OnsToolbarButtonElement;
+                                toggleButton.addEventListener('click', async () => {
+                                    await PageHelper.replacePage(
+                                        'templates/stop.html',
+                                        '#bus-navigator',
+                                        {
+                                            data: {
+                                                pageId: 'bus-stop',
+                                                routeId: routeId,
+                                                directionId: oppositeDirectionId
+                                            }
+                                        }
+                                    );
+                                });
+                                page.appendChild(toggleButton);
+                            }
+
+                            // render stops
                             stops.forEach((stop: Stop) => {
                                 const listItem = ons.createElement(`
                                     <ons-list-item tappable modifier="chevron">
@@ -166,6 +171,7 @@ export class BusTrackerView {
             return this.service.getPredictions(routeId, stopId)
                 .then((predictions: Prediction[]) => {
                     if (predictions.length > 0) {
+
                         // init stop list header
                         const directionToDisplay: string = predictions[0].direction;
                         const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;

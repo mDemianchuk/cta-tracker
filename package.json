@@ -6,7 +6,7 @@
   "main": "www/index.js",
   "scripts": {
     "prestart": "webpack --config webpack.config.js",
-    "start": "cordova emulate ios"
+    "start": "cordova emulate"
   },
   "author": "Mykola Demianchuk",
   "license": "Apache-2.0",
