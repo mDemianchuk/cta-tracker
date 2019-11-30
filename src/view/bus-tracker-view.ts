@@ -125,7 +125,7 @@ export class BusTrackerView {
     }
 
     renderPredictions(page: ons.OnsPageElement): Promise<void> {
-        if (page.data && page.data.routeId && page.data.stopId && page.data.stopName && page.data.oppositeDirectionStopId) {
+        if (page.data && page.data.routeId && page.data.stopId && page.data.stopName) {
             const routeId: string = page.data.routeId;
             const stopId: string = page.data.stopId;
             const stopName: string = page.data.stopName;
@@ -140,7 +140,7 @@ export class BusTrackerView {
 
             // add toggle button
             if(oppositeDirectionStopId) {
-                const toggleButton = ons.createElement(`
+            const toggleButton = ons.createElement(`
                 <ons-fab position="bottom right">
                     <ons-icon icon="fa-exchange"></ons-icon>
                 </ons-fab>
