@@ -23,7 +23,7 @@ export class BusTrackerView {
                 routes.forEach((route: Route) => {
                     const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
-                            'templates/stop.html',
+                            'html/stop.html',
                             '#bus-navigator',
                             {
                                 data: {
@@ -65,7 +65,7 @@ export class BusTrackerView {
                             if (directions.length > 1) {
                                 const toggleButton = PageHelper.createToggleFab(async () => {
                                     await PageHelper.replacePage(
-                                        'templates/stop.html',
+                                        'html/stop.html',
                                         '#bus-navigator',
                                         {
                                             data: {
@@ -85,7 +85,7 @@ export class BusTrackerView {
                             stops.forEach((stop: Stop) => {
                                 const listItem = PageHelper.createStopListElement(stop.name, async () => {
                                     await PageHelper.pushPage(
-                                        'templates/prediction.html',
+                                        'html/prediction.html',
                                         '#bus-navigator',
                                         {
                                             data: {
@@ -123,7 +123,7 @@ export class BusTrackerView {
             if (oppositeDirectionStopId) {
                 const toggleButton = PageHelper.createToggleFab(async () => {
                     await PageHelper.replacePage(
-                        'templates/prediction.html',
+                        'html/prediction.html',
                         '#bus-navigator',
                         {
                             data: {

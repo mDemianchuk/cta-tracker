@@ -23,7 +23,7 @@ export class TrainTrackerView {
                 routes.forEach((route: Route) => {
                     const listItem = PageHelper.createRouteListElement(route, async () => {
                         await PageHelper.pushPage(
-                            'templates/stop.html',
+                            'html/stop.html',
                             '#train-navigator',
                             {
                                 data: {
@@ -56,7 +56,7 @@ export class TrainTrackerView {
                     stations.forEach((station: Station) => {
                         const listItem = PageHelper.createStopListElement(station.name, async () => {
                             await PageHelper.pushPage(
-                                'templates/prediction.html',
+                                'html/prediction.html',
                                 '#train-navigator',
                                 {
                                     data: {
@@ -87,7 +87,6 @@ export class TrainTrackerView {
             const stopToDisplayId: number = page.data.stopToDisplayId;
             const oppositeDirectionStopToDisplayId: number = Math.abs(stopToDisplayId - 1);
 
-
             // init title
             PageHelper.addToolbarTitle(page, stationName);
 
@@ -100,7 +99,7 @@ export class TrainTrackerView {
                     if (stopToDisplay.oppositeDirectionStopId) {
                         const toggleButton = PageHelper.createToggleFab(async () => {
                             await PageHelper.replacePage(
-                                'templates/prediction.html',
+                                'html/prediction.html',
                                 '#train-navigator',
                                 {
                                     data: {
