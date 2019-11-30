@@ -4,6 +4,7 @@ import {Route} from "../models/route";
 import {PageHelper} from "../utils/page-helper";
 import {Direction} from "../models/direction";
 import {Stop} from "../models/stop";
+import {Prediction} from "../models/prediction";
 
 export class BusTrackerView {
     private readonly service: BusTrackerService;
@@ -99,12 +100,95 @@ export class BusTrackerView {
                                         ${stop.name}
                                     </ons-list-item>
                                 `) as ons.OnsListItemElement;
+                                listItem.addEventListener('click', async () => {
+                                    await PageHelper.pushPage(
+                                        'templates/prediction.html',
+                                        '#bus-navigator',
+                                        {
+                                            data: {
+                                                pageId: 'bus-prediction',
+                                                routeId: routeId,
+                                                stopId: stop.id,
+                                                stopName: stop.name,
+                                                oppositeDirectionStopId: stop.oppositeDirectionStopId
+                                            }
+                                        }
+                                    );
+                                });
                                 stopList.appendChild(listItem);
                             });
                         });
                 });
         } else {
             return Promise.reject('No routeId or directionId provided');
+        }
+    }
+
+    renderPredictions(page: ons.OnsPageElement): Promise<void> {
+        if (page.data && page.data.routeId && page.data.stopId && page.data.stopName && page.data.oppositeDirectionStopId) {
+            const routeId: string = page.data.routeId;
+            const stopId: string = page.data.stopId;
+            const stopName: string = page.data.stopName;
+            const oppositeDirectionStopId: string | null = page.data.oppositeDirectionStopId;
+
+            // init title
+            const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
+            const toolbarTitle = ons.createElement(`
+                <span>${stopName}</span>
+            `) as ons.OnsToolbarElement;
+            toolbarCenter.appendChild(toolbarTitle);
+
+            // add toggle button
+            if(oppositeDirectionStopId) {
+                const toggleButton = ons.createElement(`
+                <ons-fab position="bottom right">
+                    <ons-icon icon="fa-exchange"></ons-icon>
+                </ons-fab>
+            `) as ons.OnsToolbarButtonElement;
+                toggleButton.addEventListener('click', async () => {
+                    await PageHelper.replacePage(
+                        'templates/prediction.html',
+                        '#bus-navigator',
+                        {
+                            data: {
+                                pageId: 'bus-prediction',
+                                routeId: routeId,
+                                stopId: oppositeDirectionStopId,
+                                stopName: stopName,
+                                oppositeDirectionStopId: stopId
+                            }
+                        }
+                    );
+                });
+                page.appendChild(toggleButton);
+            }
+
+            return this.service.getPredictions(routeId, stopId)
+                .then((predictions: Prediction[]) => {
+                    if (predictions.length > 0) {
+                        // init stop list header
+                        const directionToDisplay: string = predictions[0].direction;
+                        const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                        const stopListHeader = ons.createElement(`
+                            <ons-list-header>${directionToDisplay}</ons-list-header>
+                        `) as ons.OnsListItemElement;
+                        stopList.appendChild(stopListHeader);
+
+                        // render predictions
+                        predictions.forEach((prediction: Prediction) => {
+                            const listItem = ons.createElement(`
+                                <ons-list-item>
+                                    ${prediction.arrivalTime}
+                                </ons-list-item>
+                            `) as ons.OnsListItemElement;
+                            stopList.appendChild(listItem);
+                        });
+                    } else {
+                        // display a corresponding message
+                    }
+                });
+        } else {
+            return Promise.reject('No routeId or stopId provided');
         }
     }
 }

@@ -34,6 +34,10 @@ function initEventListeners(): void {
                     await initBusStops(page);
                 } else if (pageId === 'train-station') {
                     await initTrainStations(page);
+                } else if (pageId === 'bus-prediction') {
+                    await initBusPredictions(page);
+                } else if(pageId === 'train-prediction') {
+
                 }
             }
         }
@@ -55,6 +59,10 @@ async function initBusStops(page: ons.OnsPageElement): Promise<void> {
 
 async function initTrainStations(page: ons.OnsPageElement): Promise<void> {
     return trainTrackerView.renderStations(page);
+}
+
+async function initBusPredictions(page: ons.OnsPageElement): Promise<void> {
+    return busTrackerView.renderPredictions(page);
 }
 
 function renderMainPage(): Promise<HTMLElement> {
