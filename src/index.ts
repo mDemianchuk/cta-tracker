@@ -1,4 +1,5 @@
 import * as ons from 'onsenui';
+import * as firebase from 'firebase/app';
 import {BusTrackerView} from "./view/bus-tracker-view";
 import {TrainTrackerView} from "./view/train-tracker-view";
 import {PageHelper} from "./utils/page-helper";
@@ -6,15 +7,7 @@ import {PageHelper} from "./utils/page-helper";
 let busTrackerView: BusTrackerView;
 let trainTrackerView: TrainTrackerView;
 
-function initTabbarEventListeners() {
-    const tabbar = document.querySelector('ons-tabbar') as ons.OnsTabbarElement;
-    tabbar.addEventListener('reactive', async (event: any) => {
-        const navigator = PageHelper.getNavigatorByTabIndex(event.index) as ons.OnsNavigatorElement;
-        while (navigator.pages.length > 1) {
-            await navigator.popPage();
-        }
-    });
-}
+const app = initFirebase();
 
 ons.ready(async () => {
     initViews();
@@ -52,6 +45,28 @@ function initEventListeners(): void {
         }
 
         PageHelper.removeSpinner(page);
+    });
+}
+
+function initTabbarEventListeners(): void {
+    const tabbar = document.querySelector('ons-tabbar') as ons.OnsTabbarElement;
+    tabbar.addEventListener('reactive', async (event: any) => {
+        const navigator = PageHelper.getNavigatorByTabIndex(event.index) as ons.OnsNavigatorElement;
+        while (navigator.pages.length > 1) {
+            await navigator.popPage();
+        }
+    });
+}
+
+function initFirebase(): firebase.app.App {
+    return firebase.initializeApp({
+        apiKey: process.env.API_KEY,
+        authDomain: process.env.AUTH_DOMAIN,
+        databaseURL: process.env.DB_URL,
+        projectId: process.env.PROJECT_ID,
+        storageBucket: process.env.STORAGE_BUCKET,
+        messagingSenderId: process.env.MSG_SENDER_ID,
+        appId: process.env.APP_ID
     });
 }
 
