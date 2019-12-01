@@ -22,26 +22,24 @@ function initEventListeners(): void {
         const page = event.target as ons.OnsPageElement;
         PageHelper.addSpinner(page);
 
-        if (!page.matches('#main-page')) {
-
-            // render page content
-            if (page.matches('#train-route')) {
-                await initTrainRoutes();
-            } else if (page.matches('#bus-route')) {
-                await initBusRoutes();
-            } else if (page.data && page.data.pageId) {
-                const pageId: string = page.data.pageId;
-                if (pageId === 'bus-stop') {
-                    await initBusStops(page);
-                } else if (pageId === 'train-station') {
-                    await initTrainStations(page);
-                } else if (pageId === 'bus-prediction') {
-                    await initBusPredictions(page);
-                } else if(pageId === 'train-prediction') {
-                    await initTrainPredictions(page);
-                }
+        // render page content
+        if (page.matches('#train-route')) {
+            await initTrainRoutes();
+        } else if (page.matches('#bus-route')) {
+            await initBusRoutes();
+        } else if (page.data && page.data.pageId) {
+            const pageId: string = page.data.pageId;
+            if (pageId === 'bus-stop') {
+                await initBusStops(page);
+            } else if (pageId === 'train-station') {
+                await initTrainStations(page);
+            } else if (pageId === 'bus-prediction') {
+                await initBusPredictions(page);
+            } else if (pageId === 'train-prediction') {
+                await initTrainPredictions(page);
             }
         }
+
         PageHelper.removeSpinner(page);
     });
 }
