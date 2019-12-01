@@ -18,8 +18,8 @@ export class TimeHelper {
         const remainingTimeInMinutes = Math.round(timeDifference / 60000);
 
         if (remainingTimeInMinutes < 1) {
-            return 'Appr.';
+            return 'Arr.';
         }
-        return `${remainingTimeInMinutes} m`;
+        return `${remainingTimeInMinutes}m`;
     }
 }

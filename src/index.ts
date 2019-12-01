@@ -6,10 +6,21 @@ import {PageHelper} from "./utils/page-helper";
 let busTrackerView: BusTrackerView;
 let trainTrackerView: TrainTrackerView;
 
+function initTabbarEventListeners() {
+    const tabbar = document.querySelector('ons-tabbar') as ons.OnsTabbarElement;
+    tabbar.addEventListener('reactive', async (event: any) => {
+        const navigator = PageHelper.getNavigatorByTabIndex(event.index) as ons.OnsNavigatorElement;
+        while (navigator.pages.length > 1) {
+            await navigator.popPage();
+        }
+    });
+}
+
 ons.ready(async () => {
     initViews();
     initEventListeners();
-    await renderMainPage();
+    await renderMainPage()
+        .then(() => initTabbarEventListeners());
 });
 
 function initViews(): void {

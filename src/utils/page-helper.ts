@@ -5,8 +5,19 @@ import {Route} from "../models/route";
 import {Prediction} from "../models/prediction";
 
 export class PageHelper {
+    private static navigatorMap = new Map<number, string>([
+            [0, '#bus-navigator'],
+            [1, '#train-navigator'],
+            [2, '#saved-navigator']
+        ]);
+
     private constructor() {
     }
+
+    static getNavigatorByTabIndex(index: number): ons.OnsNavigatorElement {
+        let navigatorId = PageHelper.navigatorMap.get(index) as string;
+        return document.querySelector(navigatorId) as ons.OnsNavigatorElement;
+    };
 
     static createRouteListElement(route: Route, eventListener: EventListener): ons.OnsListItemElement {
         const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
@@ -81,7 +92,7 @@ export class PageHelper {
         const color: string | undefined = ColorHelper.getColorCodeByRouteId(routeId);
         if (color) {
             return ons.createElement(`
-                <span class="route_thumbnail" style="background: ${color};"></span>
+                <span class="route_thumbnail" style="border: solid ${color} 2px;"></span>
             `) as ons.OnsPageElement;
         } else {
             return ons.createElement(`
