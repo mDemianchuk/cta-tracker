@@ -5,12 +5,15 @@ import {PageHelper} from "../utils/page-helper";
 import {Direction} from "../models/direction";
 import {Stop} from "../models/stop";
 import {Prediction} from "../models/prediction";
+import {FirebaseService} from "../services/firebase-service";
 
 export class BusTrackerView {
     private readonly service: BusTrackerService;
+    private readonly firebaseService: FirebaseService;
 
-    constructor() {
+    constructor(firebaseService: FirebaseService) {
         this.service = new BusTrackerService();
+        this.firebaseService = firebaseService;
     }
 
     async renderRoutes(): Promise<void> {

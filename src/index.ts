@@ -1,13 +1,14 @@
 import * as ons from 'onsenui';
-import * as firebase from 'firebase/app';
 import {BusTrackerView} from "./view/bus-tracker-view";
 import {TrainTrackerView} from "./view/train-tracker-view";
 import {PageHelper} from "./utils/page-helper";
+import {FirebaseService} from "./services/firebase-service";
+import {FavoriteStopsView} from "./view/favorite-stops-view";
 
+let firebaseService: FirebaseService;
 let busTrackerView: BusTrackerView;
+let favoriteStopsView: FavoriteStopsView;
 let trainTrackerView: TrainTrackerView;
-
-const app = initFirebase();
 
 ons.ready(async () => {
     initViews();
@@ -17,8 +18,10 @@ ons.ready(async () => {
 });
 
 function initViews(): void {
-    trainTrackerView = new TrainTrackerView();
-    busTrackerView = new BusTrackerView();
+    firebaseService = new FirebaseService();
+    trainTrackerView = new TrainTrackerView(firebaseService);
+    busTrackerView = new BusTrackerView(firebaseService);
+    favoriteStopsView = new FavoriteStopsView(firebaseService);
 }
 
 function initEventListeners(): void {
@@ -31,6 +34,8 @@ function initEventListeners(): void {
             await initTrainRoutes();
         } else if (page.matches('#bus-route')) {
             await initBusRoutes();
+        } else if(page.matches('#favorite-stop')) {
+            await initFavoriteStops();
         } else if (page.data && page.data.pageId) {
             const pageId: string = page.data.pageId;
             if (pageId === 'bus-stop') {
@@ -58,24 +63,16 @@ function initTabbarEventListeners(): void {
     });
 }
 
-function initFirebase(): firebase.app.App {
-    return firebase.initializeApp({
-        apiKey: process.env.API_KEY,
-        authDomain: process.env.AUTH_DOMAIN,
-        databaseURL: process.env.DB_URL,
-        projectId: process.env.PROJECT_ID,
-        storageBucket: process.env.STORAGE_BUCKET,
-        messagingSenderId: process.env.MSG_SENDER_ID,
-        appId: process.env.APP_ID
-    });
-}
-
 async function initTrainRoutes(): Promise<void> {
     return trainTrackerView.renderRoutes();
 }
 
 async function initBusRoutes(): Promise<void> {
     return busTrackerView.renderRoutes();
+}
+
+async function initFavoriteStops(): Promise<void> {
+    return favoriteStopsView.renderFavoriteStops();
 }
 
 async function initBusStops(page: ons.OnsPageElement): Promise<void> {
