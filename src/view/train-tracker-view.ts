@@ -5,12 +5,15 @@ import {Station} from "../models/station";
 import {PageHelper} from "../utils/page-helper";
 import {Prediction} from "../models/prediction";
 import {Stop} from "../models/stop";
+import {FirebaseService} from "../services/firebase-service";
 
 export class TrainTrackerView {
     private readonly service: TrainTrackerService;
+    private readonly firebaseService: FirebaseService;
 
-    constructor() {
+    constructor(firebaseService: FirebaseService) {
         this.service = new TrainTrackerService();
+        this.firebaseService = firebaseService;
     }
 
     async renderRoutes(): Promise<void> {
