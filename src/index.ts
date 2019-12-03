@@ -11,6 +11,9 @@ let favoriteStopsView: FavoriteStopsView;
 let trainTrackerView: TrainTrackerView;
 
 ons.ready(async () => {
+    if (ons.platform.isIPhoneX()) {
+        initIPhoneXView();
+    }
     initViews();
     initEventListeners();
     await renderMainPage()
@@ -24,6 +27,10 @@ function initViews(): void {
     favoriteStopsView = new FavoriteStopsView(firebaseService);
 }
 
+function initIPhoneXView() {
+    document.documentElement.setAttribute('onsflag-iphonex-portrait', '');
+}
+
 function initEventListeners(): void {
     document.addEventListener('init', async event => {
         const page = event.target as ons.OnsPageElement;
@@ -34,7 +41,7 @@ function initEventListeners(): void {
             await initTrainRoutes();
         } else if (page.matches('#bus-route')) {
             await initBusRoutes();
-        } else if(page.matches('#favorite-stop')) {
+        } else if (page.matches('#favorite-stop')) {
             await initFavoriteStops();
         } else if (page.data && page.data.pageId) {
             const pageId: string = page.data.pageId;

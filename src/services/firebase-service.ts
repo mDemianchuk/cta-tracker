@@ -1,4 +1,6 @@
 import * as firebase from 'firebase/app';
+import '@firebase/auth';
+import UserCredential = firebase.auth.UserCredential;
 
 export class FirebaseService {
     private readonly app: firebase.app.App;
@@ -15,7 +17,19 @@ export class FirebaseService {
         });
     }
 
-    getApp(): firebase.app.App {
-        return this.app;
+    async signUp(email: string, password: string): Promise<UserCredential> {
+        return firebase.auth().createUserWithEmailAndPassword(email, password);
+    }
+
+    async signIn(email: string, password: string): Promise<UserCredential> {
+        return firebase.auth().signInWithEmailAndPassword(email, password);
+    }
+
+    async signOut(): Promise<void> {
+        return firebase.auth().signOut();
+    }
+
+    isUserSignedIn(): boolean {
+        return !!firebase.auth().currentUser;
     }
 }
