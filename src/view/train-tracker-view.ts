@@ -19,26 +19,30 @@ export class TrainTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
+                if (routes.length > 1) {
+                    const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
 
-                const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
-
-                // render routes
-                routes.forEach((route: Route) => {
-                    const listItem = PageHelper.createRouteListElement(route, async () => {
-                        await PageHelper.pushPage(
-                            'html/stop.html',
-                            '#train-navigator',
-                            {
-                                data: {
-                                    pageId: 'train-station',
-                                    routeId: route.id,
-                                    routeName: route.name
+                    // render routes
+                    routes.forEach((route: Route) => {
+                        const listItem = PageHelper.createRouteListElement(route, async () => {
+                            await PageHelper.pushPage(
+                                'html/stop.html',
+                                '#train-navigator',
+                                {
+                                    data: {
+                                        pageId: 'train-station',
+                                        routeId: route.id,
+                                        routeName: route.name
+                                    }
                                 }
-                            }
-                        );
+                            );
+                        });
+                        routeList.appendChild(listItem);
                     });
-                    routeList.appendChild(listItem);
-                });
+                } else {
+                    const currentPage = document.querySelector('#train-route') as ons.OnsPageElement;
+                    PageHelper.addEmptyListMessage(currentPage, 'train routes');
+                }
             });
     }
 
@@ -52,29 +56,32 @@ export class TrainTrackerView {
 
             return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
+                    if (stations.length > 1) {
+                        const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;
 
-                    const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;
-
-                    // render stations
-                    stations.forEach((station: Station) => {
-                        const listItem = PageHelper.createStopListElement(station.name, async () => {
-                            await PageHelper.pushPage(
-                                'html/prediction.html',
-                                '#train-navigator',
-                                {
-                                    data: {
-                                        pageId: 'train-prediction',
-                                        routeId: routeId,
-                                        routeName: routeName,
-                                        stationName: station.name,
-                                        stationId: station.id,
-                                        stopToDisplayId: 0
+                        // render stations
+                        stations.forEach((station: Station) => {
+                            const listItem = PageHelper.createStopListElement(station.name, async () => {
+                                await PageHelper.pushPage(
+                                    'html/prediction.html',
+                                    '#train-navigator',
+                                    {
+                                        data: {
+                                            pageId: 'train-prediction',
+                                            routeId: routeId,
+                                            routeName: routeName,
+                                            stationName: station.name,
+                                            stationId: station.id,
+                                            stopToDisplayId: 0
+                                        }
                                     }
-                                }
-                            );
+                                );
+                            });
+                            stationList.appendChild(listItem);
                         });
-                        stationList.appendChild(listItem);
-                    });
+                    } else {
+                        PageHelper.addEmptyListMessage(page, 'train stations');
+                    }
                 });
         } else {
             return Promise.reject('One or more attributes of the page data is missing');
@@ -133,8 +140,9 @@ export class TrainTrackerView {
                                     predictionList.appendChild(listItem);
                                 });
                             } else {
-                                // display a corresponding message
+                                PageHelper.addEmptyListMessage(page, 'arrival times');
                             }
+                            PageHelper.addPredictionTime(page);
                         });
                 });
         } else {
