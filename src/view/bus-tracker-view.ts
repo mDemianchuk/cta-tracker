@@ -161,7 +161,7 @@ export class BusTrackerView {
                         // render predictions
                         const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
                         predictions.forEach((prediction: Prediction) => {
-                            const listItem: ons.OnsListItemElement = PageHelper.createPredictionListElement(prediction, routeName, 'fa-bus');
+                            const listItem: ons.OnsListItemElement = PageHelper.createPredictionListElement(prediction, routeName, 'ion-ios-bus, material:md-bus');
                             predictionList.appendChild(listItem);
                         });
                     } else {

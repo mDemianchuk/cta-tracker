@@ -136,7 +136,7 @@ export class TrainTrackerView {
                                 // render predictions
                                 const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
                                 predictions.forEach((prediction: Prediction) => {
-                                    const listItem: ons.OnsListItemElement = PageHelper.createPredictionListElement(prediction, routeName, 'fa-subway');
+                                    const listItem: ons.OnsListItemElement = PageHelper.createPredictionListElement(prediction, routeName, 'ion-ios-subway, material:md-subway');
                                     predictionList.appendChild(listItem);
                                 });
                             } else {
