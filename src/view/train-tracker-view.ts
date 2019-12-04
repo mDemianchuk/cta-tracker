@@ -88,7 +88,7 @@ export class TrainTrackerView {
         }
     }
 
-    initPredictions(page: ons.OnsPageElement): Promise<void> {
+    async initPredictions(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.stationName && page.data.stationId && page.data.stopToDisplayId !== undefined) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
@@ -101,7 +101,7 @@ export class TrainTrackerView {
             PageHelper.addToolbarTitle(page, stationName);
 
             return this.service.getStops(routeId, stationId)
-                .then((stops: Stop[]) => {
+                .then(async (stops: Stop[]) => {
 
                     const stopToDisplay: Stop = stops[stopToDisplayId];
 
@@ -125,11 +125,12 @@ export class TrainTrackerView {
                         });
                     }
 
-                    PageHelper.addSaveButton(page, this.firebaseService.isStopSaved(stopToDisplay.id), () => {
+                    const isSaved: boolean = await this.firebaseService.isStopSaved(stopToDisplay.id, 'train').catch(() => false);
+                    PageHelper.addSaveButton(page, isSaved, async () => {
                         // save the stop
-
-                        // then
-                        PageHelper.toggleSaveButtonIcon(page);
+                        await this.firebaseService.saveStop(stopToDisplay.id, stopToDisplay.name, stopToDisplay.routeId, 'train')
+                            .then(() => PageHelper.toggleSaveButtonIcon(page))
+                            .catch(error => console.log(error));
                     });
 
                     return this.service.getPredictions(routeId, stopToDisplay.id)

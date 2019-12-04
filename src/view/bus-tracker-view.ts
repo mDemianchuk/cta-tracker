@@ -118,7 +118,7 @@ export class BusTrackerView {
         }
     }
 
-    initPredictions(page: ons.OnsPageElement): Promise<void> {
+    async initPredictions(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.stopId && page.data.stopName) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
@@ -149,11 +149,12 @@ export class BusTrackerView {
                 });
             }
 
-            PageHelper.addSaveButton(page, this.firebaseService.isStopSaved(stopId), () => {
+            const isSaved: boolean = await this.firebaseService.isStopSaved(stopId, 'bus').catch(() => false);
+            PageHelper.addSaveButton(page, isSaved, async () => {
                 // save the stop
-
-                // then
-                PageHelper.toggleSaveButtonIcon(page);
+                await this.firebaseService.saveStop(stopId, stopName, routeId, 'bus')
+                    .then(() => PageHelper.toggleSaveButtonIcon(page))
+                    .catch(error => console.log(error));
             });
 
             return this.service.getPredictions(routeId, stopId)
