@@ -8,7 +8,7 @@ export class PageHelper {
     private static navigatorMap = new Map<number, string>([
         [0, '#bus-navigator'],
         [1, '#train-navigator'],
-        [2, '#favorite-stop-navigator']
+        [2, '#favorite-navigator']
     ]);
 
     private constructor() {
