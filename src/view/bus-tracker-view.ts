@@ -16,10 +16,10 @@ export class BusTrackerView {
         this.firebaseService = firebaseService;
     }
 
-    async renderRoutes(): Promise<void> {
+    async initRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
-                if (routes.length > 1) {
+                if (routes.length > 0) {
                     const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
 
                     // render routes
@@ -47,7 +47,7 @@ export class BusTrackerView {
             });
     }
 
-    async renderStops(page: ons.OnsPageElement): Promise<void> {
+    async initStops(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.directionId !== undefined) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
@@ -86,7 +86,7 @@ export class BusTrackerView {
                                 });
                             }
 
-                            if (stops.length > 1) {
+                            if (stops.length > 0) {
                                 // render stops
                                 const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
                                 stops.forEach((stop: Stop) => {
@@ -118,7 +118,7 @@ export class BusTrackerView {
         }
     }
 
-    renderPredictions(page: ons.OnsPageElement): Promise<void> {
+    initPredictions(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.stopId && page.data.stopName) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
@@ -148,6 +148,13 @@ export class BusTrackerView {
                     );
                 });
             }
+
+            PageHelper.addSaveButton(page, this.firebaseService.isStopSaved(stopId), () => {
+                // save the stop
+
+                // then
+                PageHelper.toggleSaveButtonIcon(page);
+            });
 
             return this.service.getPredictions(routeId, stopId)
                 .then((predictions: Prediction[]) => {

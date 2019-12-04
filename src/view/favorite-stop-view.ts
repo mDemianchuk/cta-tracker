@@ -1,9 +1,9 @@
 import {BusTrackerService} from "../services/bus-tracker-service";
 import {TrainTrackerService} from "../services/train-tracker-service";
 import {FirebaseService} from "../services/firebase-service";
-import {PageHelper} from "../utils/page-helper";
+import * as ons from "onsenui";
 
-export class FavoriteStopsView {
+export class FavoriteStopView {
     private readonly busTrackerService: BusTrackerService;
     private readonly trainTrackerService: TrainTrackerService;
     private readonly firebaseService: FirebaseService;
@@ -14,10 +14,15 @@ export class FavoriteStopsView {
         this.firebaseService = firebaseService;
     }
 
-    async renderFavoriteStops(): Promise<void> {
-        if(!this.firebaseService.isUserSignedIn()) {
-            await PageHelper.replacePage('html/sign-in.html', '#favorite-stop-navigator');
-        }
+    async init(): Promise<void> {
+        this.initSignOut();
         return Promise.resolve();
+    }
+
+    private initSignOut(): void {
+        const signOutButton = document.querySelector('#sign-out-button') as ons.OnsButtonElement;
+        signOutButton.addEventListener('click', async () => {
+            await this.firebaseService.signOut();
+        });
     }
 }

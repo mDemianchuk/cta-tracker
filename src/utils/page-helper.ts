@@ -8,7 +8,7 @@ export class PageHelper {
     private static navigatorMap = new Map<number, string>([
         [0, '#bus-navigator'],
         [1, '#train-navigator'],
-        [2, '#favorite-stop-navigator']
+        [2, '#favorite-navigator']
     ]);
 
     private constructor() {
@@ -73,6 +73,29 @@ export class PageHelper {
         toolbarRight.appendChild(toggleButton);
     }
 
+    static addSaveButton(page: ons.OnsPageElement, isSaved: boolean, eventListener: EventListener): void {
+        const toolbarRight = page.querySelector('ons-toolbar .right') as ons.OnsToolbarElement;
+        const saveButton = ons.createElement(`
+            <ons-toolbar-button class="save-button">
+                <ons-icon icon="ion-ios-heart-empty, material:md-favorite-outline"></ons-icon>
+            </ons-toolbar-button>
+        `) as ons.OnsToolbarButtonElement;
+        saveButton.addEventListener('click', eventListener);
+        toolbarRight.appendChild(saveButton);
+        if (isSaved) {
+            this.toggleSaveButtonIcon(page);
+        }
+    }
+
+    static toggleSaveButtonIcon(page: ons.OnsPageElement): void {
+        const saveButtonIcon = page.querySelector('.save-button .ons-icon') as Element;
+        if (saveButtonIcon.getAttribute('icon') === 'ion-ios-heart, material:md-favorite') {
+            saveButtonIcon.setAttribute('icon', 'ion-ios-heart-empty, material:md-favorite-outline');
+        } else {
+            saveButtonIcon.setAttribute('icon', 'ion-ios-heart, material:md-favorite');
+        }
+    }
+
     static addListHeader(page: ons.OnsPageElement, header: string): void {
         const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
         const stopListHeader = ons.createElement(`
@@ -109,7 +132,6 @@ export class PageHelper {
         `) as Element;
         bottomBoxElement.appendChild(predictionTimeElement);
     }
-
 
     static addEmptyListMessage(page: ons.OnsPageElement, entityName: string) {
         const bottomBoxElement = page.querySelector('.bottom-box') as Element;

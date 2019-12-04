@@ -3,32 +3,39 @@ import {BusTrackerView} from "./view/bus-tracker-view";
 import {TrainTrackerView} from "./view/train-tracker-view";
 import {PageHelper} from "./utils/page-helper";
 import {FirebaseService} from "./services/firebase-service";
-import {FavoriteStopsView} from "./view/favorite-stops-view";
+import {FavoriteStopView} from "./view/favorite-stop-view";
+import {SignInView} from "./view/sign-in-view";
 
 let firebaseService: FirebaseService;
+let signInView: SignInView;
 let busTrackerView: BusTrackerView;
-let favoriteStopsView: FavoriteStopsView;
 let trainTrackerView: TrainTrackerView;
+let favoriteStopView: FavoriteStopView;
 
 ons.ready(async () => {
     if (ons.platform.isIPhoneX()) {
         initIPhoneXView();
     }
-    initViews();
     initEventListeners();
     await renderMainPage()
+        .then(() => initViews())
         .then(() => initTabbarEventListeners());
 });
 
-function initViews(): void {
-    firebaseService = new FirebaseService();
-    trainTrackerView = new TrainTrackerView(firebaseService);
-    busTrackerView = new BusTrackerView(firebaseService);
-    favoriteStopsView = new FavoriteStopsView(firebaseService);
-}
-
 function initIPhoneXView() {
     document.documentElement.setAttribute('onsflag-iphonex-portrait', '');
+}
+
+function renderMainPage(): Promise<HTMLElement> {
+    return PageHelper.pushPage('html/main.html', '#main-navigator');
+}
+
+function initViews(): void {
+    firebaseService = new FirebaseService();
+    signInView = new SignInView(firebaseService);
+    trainTrackerView = new TrainTrackerView(firebaseService);
+    busTrackerView = new BusTrackerView(firebaseService);
+    favoriteStopView = new FavoriteStopView(firebaseService);
 }
 
 function initEventListeners(): void {
@@ -37,22 +44,26 @@ function initEventListeners(): void {
         PageHelper.addSpinner(page);
 
         // render page content
-        if (page.matches('#train-route')) {
-            await initTrainRoutes();
+        if (page.matches('#sign-in')) {
+            await signInView.init();
+        } else if (page.matches('#sign-up')) {
+            // initSignUp();
+        } else if (page.matches('#train-route')) {
+            await trainTrackerView.initRoutes();
         } else if (page.matches('#bus-route')) {
-            await initBusRoutes();
+            await busTrackerView.initRoutes();
         } else if (page.matches('#favorite-stop')) {
-            await initFavoriteStops();
+            await favoriteStopView.init();
         } else if (page.data && page.data.pageId) {
             const pageId: string = page.data.pageId;
             if (pageId === 'bus-stop') {
-                await initBusStops(page);
+                await busTrackerView.initStops(page);
             } else if (pageId === 'train-station') {
-                await initTrainStations(page);
+                await trainTrackerView.initStations(page);
             } else if (pageId === 'bus-prediction') {
-                await initBusPredictions(page);
+                await busTrackerView.initPredictions(page);
             } else if (pageId === 'train-prediction') {
-                await initTrainPredictions(page);
+                await trainTrackerView.initPredictions(page);
             }
         }
 
@@ -68,36 +79,4 @@ function initTabbarEventListeners(): void {
             await navigator.popPage();
         }
     });
-}
-
-async function initTrainRoutes(): Promise<void> {
-    return trainTrackerView.renderRoutes();
-}
-
-async function initBusRoutes(): Promise<void> {
-    return busTrackerView.renderRoutes();
-}
-
-async function initFavoriteStops(): Promise<void> {
-    return favoriteStopsView.renderFavoriteStops();
-}
-
-async function initBusStops(page: ons.OnsPageElement): Promise<void> {
-    return busTrackerView.renderStops(page);
-}
-
-async function initTrainStations(page: ons.OnsPageElement): Promise<void> {
-    return trainTrackerView.renderStations(page);
-}
-
-async function initBusPredictions(page: ons.OnsPageElement): Promise<void> {
-    return busTrackerView.renderPredictions(page);
-}
-
-async function initTrainPredictions(page: ons.OnsPageElement): Promise<void> {
-    return trainTrackerView.renderPredictions(page);
-}
-
-function renderMainPage(): Promise<HTMLElement> {
-    return PageHelper.pushPage('html/main.html', '#main-navigator');
 }
