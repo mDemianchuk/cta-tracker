@@ -19,7 +19,7 @@ export class TrainTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
-                if (routes.length > 1) {
+                if (routes.length > 0) {
                     const routeList = document.querySelector('#train-route-list') as ons.OnsListItemElement;
 
                     // render routes
@@ -56,7 +56,7 @@ export class TrainTrackerView {
 
             return this.service.getStations(routeId)
                 .then((stations: Station[]) => {
-                    if (stations.length > 1) {
+                    if (stations.length > 0) {
                         const stationList = page.querySelector('ons-list') as ons.OnsListItemElement;
 
                         // render stations
