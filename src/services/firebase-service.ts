@@ -1,22 +1,15 @@
 import * as firebase from 'firebase/app';
 import '@firebase/auth';
-import UserCredential = firebase.auth.UserCredential;
+import 'firebase/firestore'
 import {User} from "firebase";
 import {PageHelper} from "../utils/page-helper";
+import UserCredential = firebase.auth.UserCredential;
+import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 
 export class FirebaseService {
-    private readonly app: firebase.app.App;
 
     constructor() {
-        this.app = firebase.initializeApp({
-            apiKey: process.env.API_KEY,
-            authDomain: process.env.AUTH_DOMAIN,
-            databaseURL: process.env.DB_URL,
-            projectId: process.env.PROJECT_ID,
-            storageBucket: process.env.STORAGE_BUCKET,
-            messagingSenderId: process.env.MSG_SENDER_ID,
-            appId: process.env.APP_ID
-        });
+        this.initApp();
         this.initOnAuthStateChanged();
     }
 
@@ -32,12 +25,58 @@ export class FirebaseService {
         return firebase.auth().signOut();
     }
 
-    isUserSignedIn(): boolean {
-        return !!firebase.auth().currentUser;
+    async isStopSaved(id: string, stopType: string): Promise<boolean> {
+        const user: User | null = this.getCurrentUser();
+        if (user) {
+            return await firebase.firestore()
+                .collection(`users/${user.uid}/${stopType}-stops`)
+                .doc(id)
+                .get()
+                .then((doc: DocumentSnapshot) => doc.exists)
+                .catch(() => Promise.resolve(false));
+        }
+        return Promise.reject('User is not logged in');
     }
 
-    isStopSaved(stopId: string): boolean {
-        return this.isUserSignedIn();
+    async saveStop(id: string, name: string, routeId: string | null, stopType: string): Promise<void> {
+        const user: User | null = this.getCurrentUser();
+        if (user) {
+            return await firebase.firestore()
+                .doc(`users/${user.uid}/${stopType}-stops/${id}`)
+                .set({
+                    id: id, name: name, routeId: routeId
+                })
+                .catch(() => Promise.reject('Error saving a bus stop'));
+        }
+        return Promise.reject('User is not logged in');
+    }
+
+
+    async deleteStop(id: string, stopType: string): Promise<void> {
+        const user: User | null = this.getCurrentUser();
+        if (user) {
+            return await firebase.firestore()
+                .doc(`users/${user.uid}/${stopType}-stops/${id}`)
+                .delete()
+                .catch(() => Promise.reject('Error saving a bus stop'));
+        }
+        return Promise.reject('User is not logged in');
+    }
+
+    private getCurrentUser(): User | null {
+        return firebase.auth().currentUser;
+    }
+
+    private initApp(): void {
+        firebase.initializeApp({
+            apiKey: process.env.API_KEY,
+            authDomain: process.env.AUTH_DOMAIN,
+            databaseURL: process.env.DB_URL,
+            projectId: process.env.PROJECT_ID,
+            storageBucket: process.env.STORAGE_BUCKET,
+            messagingSenderId: process.env.MSG_SENDER_ID,
+            appId: process.env.APP_ID
+        });
     }
 
     private initOnAuthStateChanged(): void {
