@@ -16,7 +16,7 @@ export class TrainTrackerView {
         this.firebaseService = firebaseService;
     }
 
-    async renderRoutes(): Promise<void> {
+    async initRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
                 if (routes.length > 0) {
@@ -46,7 +46,7 @@ export class TrainTrackerView {
             });
     }
 
-    async renderStations(page: ons.OnsPageElement): Promise<void> {
+    async initStations(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
@@ -88,7 +88,7 @@ export class TrainTrackerView {
         }
     }
 
-    renderPredictions(page: ons.OnsPageElement): Promise<void> {
+    initPredictions(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.stationName && page.data.stationId && page.data.stopToDisplayId !== undefined) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;

@@ -1,6 +1,8 @@
 import * as firebase from 'firebase/app';
 import '@firebase/auth';
 import UserCredential = firebase.auth.UserCredential;
+import {User} from "firebase";
+import {PageHelper} from "../utils/page-helper";
 
 export class FirebaseService {
     private readonly app: firebase.app.App;
@@ -15,6 +17,7 @@ export class FirebaseService {
             messagingSenderId: process.env.MSG_SENDER_ID,
             appId: process.env.APP_ID
         });
+        this.initOnAuthStateChanged();
     }
 
     async signUp(email: string, password: string): Promise<UserCredential> {
@@ -34,6 +37,18 @@ export class FirebaseService {
     }
 
     isStopSaved(stopId: string): boolean {
-        return false;
+        return this.isUserSignedIn();
+    }
+
+    private initOnAuthStateChanged(): void {
+        firebase.auth().onAuthStateChanged(async (user: User) => {
+            if (!user) {
+                console.log('not signed in');
+                await PageHelper.replacePage('html/sign-in.html', '#favorite-navigator');
+            } else {
+                console.log('singed in');
+                await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator');
+            }
+        });
     }
 }

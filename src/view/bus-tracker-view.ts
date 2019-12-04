@@ -16,7 +16,7 @@ export class BusTrackerView {
         this.firebaseService = firebaseService;
     }
 
-    async renderRoutes(): Promise<void> {
+    async initRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
                 if (routes.length > 0) {
@@ -47,7 +47,7 @@ export class BusTrackerView {
             });
     }
 
-    async renderStops(page: ons.OnsPageElement): Promise<void> {
+    async initStops(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.directionId !== undefined) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
@@ -118,7 +118,7 @@ export class BusTrackerView {
         }
     }
 
-    renderPredictions(page: ons.OnsPageElement): Promise<void> {
+    initPredictions(page: ons.OnsPageElement): Promise<void> {
         if (page.data && page.data.routeId && page.data.routeName && page.data.stopId && page.data.stopName) {
             const routeId: string = page.data.routeId;
             const routeName: string = page.data.routeName;
