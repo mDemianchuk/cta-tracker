@@ -1,6 +1,9 @@
 .force-center,
 .toolbar__center {
     text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 .toolbar__left,
 .toolbar__right {
