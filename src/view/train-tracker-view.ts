@@ -127,10 +127,17 @@ export class TrainTrackerView {
 
                     const isSaved: boolean = await this.firebaseService.isStopSaved(stopToDisplay.id, 'train').catch(() => false);
                     PageHelper.addSaveButton(page, isSaved, async () => {
-                        // save the stop
-                        await this.firebaseService.saveStop(stopToDisplay.id, stopToDisplay.name, stopToDisplay.routeId, 'train')
-                            .then(() => PageHelper.toggleSaveButtonIcon(page))
-                            .catch(error => console.log(error));
+                        if (isSaved) {
+                            // delete the stop
+                            await this.firebaseService.deleteStop(stopToDisplay.id, 'train')
+                                .then(() => PageHelper.toggleSaveButtonIcon(page))
+                                .catch(error => console.log(error));
+                        } else {
+                            // save the stop
+                            await this.firebaseService.saveStop(stopToDisplay.id, stopToDisplay.name, stopToDisplay.routeId, 'train')
+                                .then(() => PageHelper.toggleSaveButtonIcon(page))
+                                .catch(error => console.log(error));
+                        }
                     });
 
                     return this.service.getPredictions(routeId, stopToDisplay.id)

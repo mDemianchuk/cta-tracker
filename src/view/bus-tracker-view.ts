@@ -151,10 +151,17 @@ export class BusTrackerView {
 
             const isSaved: boolean = await this.firebaseService.isStopSaved(stopId, 'bus').catch(() => false);
             PageHelper.addSaveButton(page, isSaved, async () => {
-                // save the stop
-                await this.firebaseService.saveStop(stopId, stopName, routeId, 'bus')
-                    .then(() => PageHelper.toggleSaveButtonIcon(page))
-                    .catch(error => console.log(error));
+                if (isSaved) {
+                    // delete the stop
+                    await this.firebaseService.deleteStop(stopId, 'bus')
+                        .then(() => PageHelper.toggleSaveButtonIcon(page))
+                        .catch(error => console.log(error));
+                } else {
+                    // save the stop
+                    await this.firebaseService.saveStop(stopId, stopName, routeId, 'bus')
+                        .then(() => PageHelper.toggleSaveButtonIcon(page))
+                        .catch(error => console.log(error));
+                }
             });
 
             return this.service.getPredictions(routeId, stopId)

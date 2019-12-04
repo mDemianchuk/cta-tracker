@@ -42,13 +42,22 @@ export class FirebaseService {
         const user: User | null = this.getCurrentUser();
         if (user) {
             return await firebase.firestore()
-                .collection(`users/${user.uid}/${stopType}-stops`)
-                .doc(id)
+                .doc(`users/${user.uid}/${stopType}-stops/${id}`)
                 .set({
-                    id: id,
-                    name: name,
-                    routeId: routeId
+                    id: id, name: name, routeId: routeId
                 })
+                .catch(() => Promise.reject('Error saving a bus stop'));
+        }
+        return Promise.reject('User is not logged in');
+    }
+
+
+    async deleteStop(id: string, stopType: string): Promise<void> {
+        const user: User | null = this.getCurrentUser();
+        if (user) {
+            return await firebase.firestore()
+                .doc(`users/${user.uid}/${stopType}-stops/${id}`)
+                .delete()
                 .catch(() => Promise.reject('Error saving a bus stop'));
         }
         return Promise.reject('User is not logged in');
