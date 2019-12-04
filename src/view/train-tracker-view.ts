@@ -125,6 +125,13 @@ export class TrainTrackerView {
                         });
                     }
 
+                    PageHelper.addSaveButton(page, this.firebaseService.isStopSaved(stopToDisplay.id), () => {
+                        // save the stop
+
+                        // then
+                        PageHelper.toggleSaveButtonIcon(page);
+                    });
+
                     return this.service.getPredictions(routeId, stopToDisplay.id)
                         .then((predictions: Prediction[]) => {
                             if (predictions.length > 0) {

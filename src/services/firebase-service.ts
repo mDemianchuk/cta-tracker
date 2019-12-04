@@ -32,4 +32,8 @@ export class FirebaseService {
     isUserSignedIn(): boolean {
         return !!firebase.auth().currentUser;
     }
+
+    isStopSaved(stopId: string): boolean {
+        return false;
+    }
 }
