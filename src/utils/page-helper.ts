@@ -65,7 +65,7 @@ export class PageHelper {
     static createToggleFab(eventListener: EventListener): ons.OnsFabElement {
         const toggleFab = ons.createElement(`
             <ons-fab position="bottom right">
-                <ons-icon icon="fa-exchange"></ons-icon>
+                <ons-icon icon="ion-ios-swap, material:md-swap"></ons-icon>
             </ons-fab>
         `) as ons.OnsFabElement;
         toggleFab.addEventListener('click', eventListener);
