@@ -5,9 +5,14 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
 }
+
 .toolbar__left,
 .toolbar__right {
     width: 27% !important;
+}
+
+.list-item {
+    height: 60px !important;
 }
 
 .route_thumbnail {
