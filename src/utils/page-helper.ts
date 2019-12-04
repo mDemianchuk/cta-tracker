@@ -62,20 +62,21 @@ export class PageHelper {
         return listItem;
     }
 
-    static createToggleFab(eventListener: EventListener): ons.OnsFabElement {
-        const toggleFab = ons.createElement(`
-            <ons-fab position="bottom right">
+    static addToggleButton(page: ons.OnsPageElement, eventListener: EventListener): void {
+        const toolbarRight = page.querySelector('ons-toolbar .right') as ons.OnsToolbarElement;
+        const toggleButton = ons.createElement(`
+            <ons-toolbar-button>
                 <ons-icon icon="ion-ios-swap, material:md-swap"></ons-icon>
-            </ons-fab>
-        `) as ons.OnsFabElement;
-        toggleFab.addEventListener('click', eventListener);
-        return toggleFab;
+            </ons-toolbar-button>
+        `) as ons.OnsToolbarButtonElement;
+        toggleButton.addEventListener('click', eventListener);
+        toolbarRight.appendChild(toggleButton);
     }
 
     static addListHeader(page: ons.OnsPageElement, header: string): void {
         const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
         const stopListHeader = ons.createElement(`
-            <ons-list-header>${header}</ons-list-header>
+            <ons-list-header class="force-center">${header}</ons-list-header>
         `) as ons.OnsListItemElement;
         stopList.appendChild(stopListHeader);
     }

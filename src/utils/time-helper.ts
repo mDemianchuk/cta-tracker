@@ -16,10 +16,11 @@ export class TimeHelper {
 
     static getFormattedCurrentTime() {
         const currentTime = new Date();
-        const hours: number = currentTime.getHours();
+        let hours: number = currentTime.getHours();
         const minutes: number = currentTime.getMinutes();
         const amPm: string = hours > 12 ? 'pm' : 'am';
-        const hoursRepresentation: number = hours % 12;
+        hours = hours % 12;
+        const hoursRepresentation: string =  hours == 0 ? `12` : `${hours}`;
         const minutesRepresentation: string = minutes < 10 ? `0${minutes}` : `${minutes}`;
 
         return `${hoursRepresentation}:${minutesRepresentation}${amPm}`;
