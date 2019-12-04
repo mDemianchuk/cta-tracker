@@ -6,10 +6,10 @@ import {Prediction} from "../models/prediction";
 
 export class PageHelper {
     private static navigatorMap = new Map<number, string>([
-            [0, '#bus-navigator'],
-            [1, '#train-navigator'],
-            [2, '#favorite-stop-navigator']
-        ]);
+        [0, '#bus-navigator'],
+        [1, '#train-navigator'],
+        [2, '#favorite-stop-navigator']
+    ]);
 
     private constructor() {
     }
@@ -99,6 +99,23 @@ export class PageHelper {
                 <span class="route_thumbnail">${routeId}</span>
             `) as ons.OnsPageElement;
         }
+    }
+
+    static addPredictionTime(page: ons.OnsPageElement) {
+        const bottomBoxElement = page.querySelector('.bottom-box') as Element;
+        const predictionTimeElement = ons.createElement(`
+            <p>Last updated at ${TimeHelper.getFormattedCurrentTime()}</p>
+        `) as Element;
+        bottomBoxElement.appendChild(predictionTimeElement);
+    }
+
+
+    static addEmptyListMessage(page: ons.OnsPageElement, entityName: string) {
+        const bottomBoxElement = page.querySelector('.bottom-box') as Element;
+        const emptyListElement = ons.createElement(`
+            <p>No ${entityName} currently available</p>
+        `) as Element;
+        bottomBoxElement.appendChild(emptyListElement);
     }
 
     static addSpinner(page: ons.OnsPageElement) {

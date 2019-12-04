@@ -13,4 +13,15 @@ export class TimeHelper {
         }
         return `${remainingTimeInMinutes}m`;
     }
+
+    static getFormattedCurrentTime() {
+        const currentTime = new Date();
+        const hours: number = currentTime.getHours();
+        const minutes: number = currentTime.getMinutes();
+        const amPm: string = hours > 12 ? 'pm' : 'am';
+        const hoursRepresentation: number = hours % 12;
+        const minutesRepresentation: string = minutes < 10 ? `0${minutes}` : `${minutes}`;
+
+        return `${hoursRepresentation}:${minutesRepresentation}${amPm}`;
+    }
 }

@@ -19,27 +19,31 @@ export class BusTrackerView {
     async renderRoutes(): Promise<void> {
         return this.service.getRoutes()
             .then((routes: Route[]) => {
+                if (routes.length > 1) {
+                    const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
 
-                const routeList = document.querySelector('#bus-route-list') as ons.OnsListItemElement;
-
-                // render routes
-                routes.forEach((route: Route) => {
-                    const listItem = PageHelper.createRouteListElement(route, async () => {
-                        await PageHelper.pushPage(
-                            'html/stop.html',
-                            '#bus-navigator',
-                            {
-                                data: {
-                                    pageId: 'bus-stop',
-                                    routeId: route.id,
-                                    routeName: route.name,
-                                    directionId: 0
+                    // render routes
+                    routes.forEach((route: Route) => {
+                        const listItem = PageHelper.createRouteListElement(route, async () => {
+                            await PageHelper.pushPage(
+                                'html/stop.html',
+                                '#bus-navigator',
+                                {
+                                    data: {
+                                        pageId: 'bus-stop',
+                                        routeId: route.id,
+                                        routeName: route.name,
+                                        directionId: 0
+                                    }
                                 }
-                            }
-                        );
+                            );
+                        });
+                        routeList.appendChild(listItem);
                     });
-                    routeList.appendChild(listItem);
-                });
+                } else {
+                    const currentPage = document.querySelector('#bus-route') as ons.OnsPageElement;
+                    PageHelper.addEmptyListMessage(currentPage, 'bus routes');
+                }
             });
     }
 
@@ -83,27 +87,31 @@ export class BusTrackerView {
                                 page.appendChild(toggleButton);
                             }
 
-                            // render stops
-                            const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
-                            stops.forEach((stop: Stop) => {
-                                const listItem = PageHelper.createStopListElement(stop.name, async () => {
-                                    await PageHelper.pushPage(
-                                        'html/prediction.html',
-                                        '#bus-navigator',
-                                        {
-                                            data: {
-                                                pageId: 'bus-prediction',
-                                                routeId: routeId,
-                                                routeName: routeName,
-                                                stopId: stop.id,
-                                                stopName: stop.name,
-                                                oppositeDirectionStopId: stop.oppositeDirectionStopId
+                            if (stops.length > 1) {
+                                // render stops
+                                const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
+                                stops.forEach((stop: Stop) => {
+                                    const listItem = PageHelper.createStopListElement(stop.name, async () => {
+                                        await PageHelper.pushPage(
+                                            'html/prediction.html',
+                                            '#bus-navigator',
+                                            {
+                                                data: {
+                                                    pageId: 'bus-prediction',
+                                                    routeId: routeId,
+                                                    routeName: routeName,
+                                                    stopId: stop.id,
+                                                    stopName: stop.name,
+                                                    oppositeDirectionStopId: stop.oppositeDirectionStopId
+                                                }
                                             }
-                                        }
-                                    );
+                                        );
+                                    });
+                                    stopList.appendChild(listItem);
                                 });
-                                stopList.appendChild(listItem);
-                            });
+                            } else {
+                                PageHelper.addEmptyListMessage(page, 'bus stops');
+                            }
                         });
                 });
         } else {
@@ -157,8 +165,9 @@ export class BusTrackerView {
                             predictionList.appendChild(listItem);
                         });
                     } else {
-                        // display a corresponding message
+                        PageHelper.addEmptyListMessage(page, 'arrival times');
                     }
+                    PageHelper.addPredictionTime(page);
                 });
         } else {
             return Promise.reject('One or more attributes of the page data is missing');
