@@ -4,7 +4,7 @@ export class TrainTrackerClient {
     private readonly baseUrl: URL;
 
     constructor() {
-        this.baseUrl = new URL('http://ec2-3-228-10-54.compute-1.amazonaws.com/');
+        this.baseUrl = new URL('http://ec2-3-234-229-182.compute-1.amazonaws.com/');
     }
 
     async getRotues(): Promise<object[]> {

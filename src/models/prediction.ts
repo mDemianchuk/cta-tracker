@@ -5,11 +5,11 @@ export class Prediction {
     readonly routeId: string;
     readonly direction: string;
     readonly destination: string;
-    readonly arrivalTime: string;
-    readonly predictionTime: string;
+    readonly arrivalTime: number;
+    readonly predictionTime: number;
     readonly oppositeDirectionStopId: string | null;
 
-    constructor(vehicleId: string, stopId: string, stopName: string, routeId: string, direction: string, destination: string, arrivalTime: string, predictionTime: string, oppositeDirectionStopId: string) {
+    constructor(vehicleId: string, stopId: string, stopName: string, routeId: string, direction: string, destination: string, arrivalTime: number, predictionTime: number, oppositeDirectionStopId: string) {
         this.vehicleId = vehicleId;
         this.stopId = stopId;
         this.stopName = stopName;
