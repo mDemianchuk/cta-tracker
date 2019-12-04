@@ -70,7 +70,7 @@ export class BusTrackerView {
 
                             // add toggle button
                             if (directions.length > 1) {
-                                const toggleButton = PageHelper.createToggleFab(async () => {
+                                PageHelper.addToggleButton(page, async () => {
                                     await PageHelper.replacePage(
                                         'html/stop.html',
                                         '#bus-navigator',
@@ -84,7 +84,6 @@ export class BusTrackerView {
                                         }
                                     );
                                 });
-                                page.appendChild(toggleButton);
                             }
 
                             if (stops.length > 1) {
@@ -132,7 +131,7 @@ export class BusTrackerView {
 
             // add toggle button
             if (oppositeDirectionStopId) {
-                const toggleButton = PageHelper.createToggleFab(async () => {
+                PageHelper.addToggleButton(page, async () => {
                     await PageHelper.replacePage(
                         'html/prediction.html',
                         '#bus-navigator',
@@ -148,7 +147,6 @@ export class BusTrackerView {
                         }
                     );
                 });
-                page.appendChild(toggleButton);
             }
 
             return this.service.getPredictions(routeId, stopId)
