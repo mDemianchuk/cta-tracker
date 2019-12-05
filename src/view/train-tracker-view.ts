@@ -6,6 +6,7 @@ import {PageHelper} from "../utils/page-helper";
 import {Prediction} from "../models/prediction";
 import {Stop} from "../models/stop";
 import {FirebaseService} from "../services/firebase-service";
+import {FavoriteStop} from "../models/favorite-stop";
 
 export class TrainTrackerView {
     private readonly service: TrainTrackerService;
@@ -125,17 +126,19 @@ export class TrainTrackerView {
                         });
                     }
 
-                    const isSaved: boolean = await this.firebaseService.isStopSaved(stopToDisplay.id, 'train').catch(() => false);
-                    PageHelper.addSaveButton(page, isSaved, async () => {
-                        const isSaved: boolean = await this.firebaseService.isStopSaved(stopToDisplay.id, 'train').catch(() => false);
+                    const stopToBeSaved = new FavoriteStop(stopToDisplay.id, stopToDisplay.name, routeId, routeName);
+
+                    const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
+                    PageHelper.addSaveButton(page, isAlreadySaved, async () => {
+                        const isSaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
                         if (isSaved) {
                             // delete the stop
-                            await this.firebaseService.deleteStop(stopToDisplay.id, 'train')
+                            await this.firebaseService.deleteStop(stopToBeSaved.id, 'train')
                                 .then(() => PageHelper.toggleSaveButtonIcon(page))
                                 .catch(error => console.log(error));
                         } else {
                             // save the stop
-                            await this.firebaseService.saveStop(stopToDisplay.id, stopToDisplay.name, stopToDisplay.routeId, 'train')
+                            await this.firebaseService.saveStop(stopToBeSaved, 'train')
                                 .then(() => PageHelper.toggleSaveButtonIcon(page))
                                 .catch(error => console.log(error));
                         }

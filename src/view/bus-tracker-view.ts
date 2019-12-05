@@ -6,6 +6,7 @@ import {Direction} from "../models/direction";
 import {Stop} from "../models/stop";
 import {Prediction} from "../models/prediction";
 import {FirebaseService} from "../services/firebase-service";
+import {FavoriteStop} from "../models/favorite-stop";
 
 export class BusTrackerView {
     private readonly service: BusTrackerService;
@@ -149,17 +150,19 @@ export class BusTrackerView {
                 });
             }
 
-            const isSaved: boolean = await this.firebaseService.isStopSaved(stopId, 'bus').catch(() => false);
-            PageHelper.addSaveButton(page, isSaved, async () => {
-                const isSaved: boolean = await this.firebaseService.isStopSaved(stopId, 'bus').catch(() => false);
+            const stopToBeSaved = new FavoriteStop(stopId, stopName, routeId, routeName);
+
+            const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'bus').catch(() => false);
+            PageHelper.addSaveButton(page, isAlreadySaved, async () => {
+                const isSaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'bus').catch(() => false);
                 if (isSaved) {
                     // delete the stop
-                    await this.firebaseService.deleteStop(stopId, 'bus')
+                    await this.firebaseService.deleteStop(stopToBeSaved.id, 'bus')
                         .then(() => PageHelper.toggleSaveButtonIcon(page))
                         .catch(error => console.log(error));
                 } else {
                     // save the stop
-                    await this.firebaseService.saveStop(stopId, stopName, routeId, 'bus')
+                    await this.firebaseService.saveStop(stopToBeSaved, 'bus')
                         .then(() => PageHelper.toggleSaveButtonIcon(page))
                         .catch(error => console.log(error));
                 }
