@@ -50,7 +50,6 @@ export class FirebaseService {
         return Promise.reject('User is not logged in');
     }
 
-
     async deleteStop(id: string, stopType: string): Promise<void> {
         const user: User | null = this.getCurrentUser();
         if (user) {
@@ -81,11 +80,13 @@ export class FirebaseService {
     private initOnAuthStateChanged(): void {
         firebase.auth().onAuthStateChanged(async (user: User) => {
             if (!user) {
-                console.log('not signed in');
                 await PageHelper.replacePage('html/sign-in.html', '#favorite-navigator');
             } else {
-                console.log('singed in');
-                await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator');
+                firebase.database()
+                    .ref(`users/${user.uid}/`)
+                    .on('value', async () => {
+                        await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator')
+                    });
             }
         });
     }
