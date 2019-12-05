@@ -96,20 +96,14 @@ export class PageHelper {
         }
     }
 
-    static addListHeader(page: ons.OnsPageElement, header: string): void {
-        const stopList = page.querySelector('ons-list') as ons.OnsListItemElement;
-        const stopListHeader = ons.createElement(`
-            <ons-list-header class="force-center">${header}</ons-list-header>
-        `) as ons.OnsListItemElement;
-        stopList.appendChild(stopListHeader);
+    static addToolbarTitle(page: ons.OnsPageElement, title: string): void {
+        const toolbarTitle = page.querySelector('ons-toolbar .center .toolbar-title') as ons.OnsToolbarElement;
+        toolbarTitle.innerHTML = title;
     }
 
-    static addToolbarTitle(page: ons.OnsPageElement, title: string): void {
-        const toolbarCenter = page.querySelector('ons-toolbar .center') as ons.OnsToolbarElement;
-        const toolbarTitle = ons.createElement(`
-            <span>${title}</span>
-        `) as ons.OnsToolbarElement;
-        toolbarCenter.appendChild(toolbarTitle);
+    static addToolbarSubtitle(page: ons.OnsPageElement, subtitle: string): void {
+        const toolbarSubtitle = page.querySelector('ons-toolbar .center .toolbar-subtitle') as ons.OnsToolbarElement;
+        toolbarSubtitle.innerHTML = subtitle;
     }
 
     static createThumbnail(routeId: string): ons.OnsPageElement {

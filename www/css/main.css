@@ -1,6 +1,18 @@
 .force-center,
 .toolbar__center {
     text-align: center !important;
+
+}
+
+.toolbar__center {
+    display: flex !important;
+    flex-direction: column !important;
+    line-height: unset !important;
+    justify-content: center !important;
+}
+
+.toolbar-title,
+.toolbar-subtitle {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -9,6 +21,11 @@
 .toolbar__left,
 .toolbar__right {
     width: 27% !important;
+}
+
+.toolbar-subtitle {
+    font-size: 13px;
+    color: dimgray;
 }
 
 .list-item {

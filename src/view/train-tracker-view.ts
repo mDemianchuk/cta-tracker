@@ -149,7 +149,7 @@ export class TrainTrackerView {
                             if (predictions.length > 0) {
                                 // init stop list header
                                 const directionToDisplay: string = predictions[0].direction;
-                                PageHelper.addListHeader(page, directionToDisplay);
+                                PageHelper.addToolbarSubtitle(page, directionToDisplay);
 
                                 // render predictions
                                 const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
