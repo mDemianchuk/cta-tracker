@@ -151,6 +151,7 @@ export class BusTrackerView {
 
             const isSaved: boolean = await this.firebaseService.isStopSaved(stopId, 'bus').catch(() => false);
             PageHelper.addSaveButton(page, isSaved, async () => {
+                const isSaved: boolean = await this.firebaseService.isStopSaved(stopId, 'bus').catch(() => false);
                 if (isSaved) {
                     // delete the stop
                     await this.firebaseService.deleteStop(stopId, 'bus')

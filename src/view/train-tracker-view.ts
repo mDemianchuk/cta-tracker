@@ -127,6 +127,7 @@ export class TrainTrackerView {
 
                     const isSaved: boolean = await this.firebaseService.isStopSaved(stopToDisplay.id, 'train').catch(() => false);
                     PageHelper.addSaveButton(page, isSaved, async () => {
+                        const isSaved: boolean = await this.firebaseService.isStopSaved(stopToDisplay.id, 'train').catch(() => false);
                         if (isSaved) {
                             // delete the stop
                             await this.firebaseService.deleteStop(stopToDisplay.id, 'train')

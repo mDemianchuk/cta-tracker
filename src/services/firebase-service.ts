@@ -1,10 +1,10 @@
 import * as firebase from 'firebase/app';
 import '@firebase/auth';
-import 'firebase/firestore'
+import 'firebase/database'
 import {User} from "firebase";
 import {PageHelper} from "../utils/page-helper";
 import UserCredential = firebase.auth.UserCredential;
-import DocumentSnapshot = firebase.firestore.DocumentSnapshot;
+import DataSnapshot = firebase.database.DataSnapshot;
 
 export class FirebaseService {
 
@@ -28,11 +28,10 @@ export class FirebaseService {
     async isStopSaved(id: string, stopType: string): Promise<boolean> {
         const user: User | null = this.getCurrentUser();
         if (user) {
-            return await firebase.firestore()
-                .collection(`users/${user.uid}/${stopType}-stops`)
-                .doc(id)
-                .get()
-                .then((doc: DocumentSnapshot) => doc.exists)
+            return await firebase.database()
+                .ref(`users/${user.uid}/${stopType}-stops/${id}`)
+                .once('value')
+                .then((snapshot: DataSnapshot) => snapshot.exists())
                 .catch(() => Promise.resolve(false));
         }
         return Promise.reject('User is not logged in');
@@ -41,8 +40,8 @@ export class FirebaseService {
     async saveStop(id: string, name: string, routeId: string | null, stopType: string): Promise<void> {
         const user: User | null = this.getCurrentUser();
         if (user) {
-            return await firebase.firestore()
-                .doc(`users/${user.uid}/${stopType}-stops/${id}`)
+            return await firebase.database()
+                .ref(`users/${user.uid}/${stopType}-stops/${id}`)
                 .set({
                     id: id, name: name, routeId: routeId
                 })
@@ -55,9 +54,9 @@ export class FirebaseService {
     async deleteStop(id: string, stopType: string): Promise<void> {
         const user: User | null = this.getCurrentUser();
         if (user) {
-            return await firebase.firestore()
-                .doc(`users/${user.uid}/${stopType}-stops/${id}`)
-                .delete()
+            return await firebase.database()
+                .ref(`users/${user.uid}/${stopType}-stops/${id}`)
+                .remove()
                 .catch(() => Promise.reject('Error saving a bus stop'));
         }
         return Promise.reject('User is not logged in');
