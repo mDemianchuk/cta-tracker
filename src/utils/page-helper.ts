@@ -72,7 +72,7 @@ export class PageHelper {
                     <div class="left"></div>
                     <div class="center">
                       <span class="list-item__title">${stop.stopName}</span>
-                      <span class="list-item__subtitle">${stop.routeName}</span>
+                      <span class="list-item__subtitle">${stop.direction}</span>
                     </div>
                 </ons-list-item>
             `) as ons.OnsListItemElement;
