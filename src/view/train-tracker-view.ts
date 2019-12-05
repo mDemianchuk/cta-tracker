@@ -126,7 +126,7 @@ export class TrainTrackerView {
                         });
                     }
 
-                    const stopToBeSaved = new FavoriteStop(stopToDisplay.id, stopToDisplay.name, routeId, routeName);
+                    const stopToBeSaved = new FavoriteStop(stopToDisplay.id, stationName, routeId, routeName);
 
                     const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
                     PageHelper.addSaveButton(page, isAlreadySaved, async () => {

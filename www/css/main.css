@@ -1,7 +1,6 @@
 .force-center,
 .toolbar__center {
     text-align: center !important;
-
 }
 
 .toolbar__center {
@@ -12,7 +11,9 @@
 }
 
 .toolbar-title,
-.toolbar-subtitle {
+.list-item__title,
+.toolbar-subtitle,
+.list-item__subtitle {
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;

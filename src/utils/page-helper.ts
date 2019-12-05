@@ -3,6 +3,7 @@ import {ColorHelper} from "./color-helper";
 import {TimeHelper} from "./time-helper";
 import {Route} from "../models/route";
 import {Prediction} from "../models/prediction";
+import {FavoriteStop} from "../models/favorite-stop";
 
 export class PageHelper {
     private static navigatorMap = new Map<number, string>([
@@ -60,6 +61,25 @@ export class PageHelper {
         `) as ons.OnsListItemElement;
         listItem.querySelector('.left')!.appendChild(thumbnail);
         return listItem;
+    }
+
+    static createFavoriteStopList(stops: FavoriteStop[]): string {
+        const listElement = ons.createElement('<ons-list></ons-list>') as Element;
+        stops.forEach((stop: FavoriteStop) => {
+            const thumbnail = PageHelper.createThumbnail(stop.routeId) as ons.OnsPageElement;
+            const listItem = ons.createElement(`
+                <ons-list-item tappable modifier="longdivider chevron">
+                    <div class="left"></div>
+                    <div class="center">
+                      <span class="list-item__title">${stop.stopName}</span>
+                      <span class="list-item__subtitle">${stop.routeName}</span>
+                    </div>
+                </ons-list-item>
+            `) as ons.OnsListItemElement;
+            listItem.querySelector('.left')!.appendChild(thumbnail);
+            listElement.appendChild(listItem);
+        });
+        return listElement.innerHTML;
     }
 
     static addToggleButton(page: ons.OnsPageElement, eventListener: EventListener): void {

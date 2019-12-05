@@ -6,6 +6,7 @@ import {PageHelper} from "../utils/page-helper";
 import UserCredential = firebase.auth.UserCredential;
 import DataSnapshot = firebase.database.DataSnapshot;
 import {FavoriteStop} from "../models/favorite-stop";
+import {FavoriteStopView} from "../view/favorite-stop-view";
 
 export class FirebaseService {
 
@@ -26,14 +27,14 @@ export class FirebaseService {
         return firebase.auth().signOut();
     }
 
-    async getStops(stopType: string): Promise<FavoriteStop[]> {
+    async getStopsByType(stopType: string): Promise<FavoriteStop[]> {
         const user: User | null = this.getCurrentUser();
         if (user) {
             return await firebase.database()
                 .ref(`users/${user.uid}/${stopType}-stops/`)
                 .once('value')
-                .then((snapshot: DataSnapshot) => snapshot.val() || [] as FavoriteStop[])
-                .catch(() => Promise.reject('Error retrieving stops'));
+                .then((snapshot: DataSnapshot) => Object.values(snapshot.val()) as FavoriteStop[])
+                .catch(() => Promise.resolve([]));
         }
         return Promise.reject('User is not logged in');
     }
@@ -96,7 +97,9 @@ export class FirebaseService {
                 firebase.database()
                     .ref(`users/${user.uid}/`)
                     .on('value', async () => {
-                        // re-render fav stops
+                        let stops = await this.getStopsByType('train');
+                        stops = stops.concat(await this.getStopsByType('bus'));
+                        FavoriteStopView.renderStops(stops);
                     });
                 await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator')
             }

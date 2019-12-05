@@ -2,6 +2,8 @@ import {BusTrackerService} from "../services/bus-tracker-service";
 import {TrainTrackerService} from "../services/train-tracker-service";
 import {FirebaseService} from "../services/firebase-service";
 import * as ons from "onsenui";
+import {FavoriteStop} from "../models/favorite-stop";
+import {PageHelper} from "../utils/page-helper";
 
 export class FavoriteStopView {
     private readonly busTrackerService: BusTrackerService;
@@ -16,7 +18,6 @@ export class FavoriteStopView {
 
     async init(): Promise<void> {
         this.initSignOut();
-        // render fav stops
     }
 
     private initSignOut(): void {
@@ -24,5 +25,10 @@ export class FavoriteStopView {
         signOutButton.addEventListener('click', async () => {
             await this.firebaseService.signOut();
         });
+    }
+
+    public static renderStops(stops: FavoriteStop[]): void {
+        const listElement = document.querySelector('#favorite-stop-list') as Element;
+        listElement.innerHTML = PageHelper.createFavoriteStopList(stops);
     }
 }
