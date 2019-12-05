@@ -16,7 +16,7 @@ export class FavoriteStopView {
 
     async init(): Promise<void> {
         this.initSignOut();
-        return Promise.resolve();
+        // render fav stops
     }
 
     private initSignOut(): void {

@@ -5,6 +5,7 @@ import {User} from "firebase";
 import {PageHelper} from "../utils/page-helper";
 import UserCredential = firebase.auth.UserCredential;
 import DataSnapshot = firebase.database.DataSnapshot;
+import {FavoriteStop} from "../models/favorite-stop";
 
 export class FirebaseService {
 
@@ -25,11 +26,23 @@ export class FirebaseService {
         return firebase.auth().signOut();
     }
 
-    async isStopSaved(id: string, stopType: string): Promise<boolean> {
+    async getStops(stopType: string): Promise<FavoriteStop[]> {
         const user: User | null = this.getCurrentUser();
         if (user) {
             return await firebase.database()
-                .ref(`users/${user.uid}/${stopType}-stops/${id}`)
+                .ref(`users/${user.uid}/${stopType}-stops/`)
+                .once('value')
+                .then((snapshot: DataSnapshot) => snapshot.val() || [] as FavoriteStop[])
+                .catch(() => Promise.reject('Error retrieving stops'));
+        }
+        return Promise.reject('User is not logged in');
+    }
+
+    async isStopSaved(stopId: string, stopType: string): Promise<boolean> {
+        const user: User | null = this.getCurrentUser();
+        if (user) {
+            return await firebase.database()
+                .ref(`users/${user.uid}/${stopType}-stops/${stopId}`)
                 .once('value')
                 .then((snapshot: DataSnapshot) => snapshot.exists())
                 .catch(() => Promise.resolve(false));
@@ -37,26 +50,24 @@ export class FirebaseService {
         return Promise.reject('User is not logged in');
     }
 
-    async saveStop(id: string, name: string, routeId: string | null, stopType: string): Promise<void> {
+    async saveStop(stopToBeSaved: FavoriteStop, stopType: string): Promise<void> {
         const user: User | null = this.getCurrentUser();
         if (user) {
             return await firebase.database()
-                .ref(`users/${user.uid}/${stopType}-stops/${id}`)
-                .set({
-                    id: id, name: name, routeId: routeId
-                })
+                .ref(`users/${user.uid}/${stopType}-stops/${stopToBeSaved.id}`)
+                .set(stopToBeSaved)
                 .catch(() => Promise.reject('Error saving a bus stop'));
         }
         return Promise.reject('User is not logged in');
     }
 
-    async deleteStop(id: string, stopType: string): Promise<void> {
+    async deleteStop(stopId: string, stopType: string): Promise<void> {
         const user: User | null = this.getCurrentUser();
         if (user) {
             return await firebase.database()
-                .ref(`users/${user.uid}/${stopType}-stops/${id}`)
+                .ref(`users/${user.uid}/${stopType}-stops/${stopId}`)
                 .remove()
-                .catch(() => Promise.reject('Error saving a bus stop'));
+                .catch(() => Promise.reject('Error saving a stop'));
         }
         return Promise.reject('User is not logged in');
     }
@@ -85,8 +96,9 @@ export class FirebaseService {
                 firebase.database()
                     .ref(`users/${user.uid}/`)
                     .on('value', async () => {
-                        await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator')
+                        // re-render fav stops
                     });
+                await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator')
             }
         });
     }
