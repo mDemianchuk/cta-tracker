@@ -150,30 +150,30 @@ export class BusTrackerView {
                 });
             }
 
-            const stopToBeSaved = new FavoriteStop(stopId, stopName, routeId, routeName);
-
-            const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'bus').catch(() => false);
-            PageHelper.addSaveButton(page, isAlreadySaved, async () => {
-                const isSaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'bus').catch(() => false);
-                if (isSaved) {
-                    // delete the stop
-                    await this.firebaseService.deleteStop(stopToBeSaved.id, 'bus')
-                        .then(() => PageHelper.toggleSaveButtonIcon(page))
-                        .catch(error => console.log(error));
-                } else {
-                    // save the stop
-                    await this.firebaseService.saveStop(stopToBeSaved, 'bus')
-                        .then(() => PageHelper.toggleSaveButtonIcon(page))
-                        .catch(error => console.log(error));
-                }
-            });
-
             return this.service.getPredictions(routeId, stopId)
-                .then((predictions: Prediction[]) => {
+                .then(async (predictions: Prediction[]) => {
                     if (predictions.length > 0) {
                         // init stop list header
                         const directionToDisplay: string = predictions[0].direction;
                         PageHelper.addToolbarSubtitle(page, directionToDisplay);
+
+                        const stopToBeSaved = new FavoriteStop(stopId, stopName, routeId, predictions[0].direction);
+
+                        const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'bus').catch(() => false);
+                        PageHelper.addSaveButton(page, isAlreadySaved, async () => {
+                            const isSaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'bus').catch(() => false);
+                            if (isSaved) {
+                                // delete the stop
+                                await this.firebaseService.deleteStop(stopToBeSaved.id, 'bus')
+                                    .then(() => PageHelper.toggleSaveButtonIcon(page))
+                                    .catch(error => console.log(error));
+                            } else {
+                                // save the stop
+                                await this.firebaseService.saveStop(stopToBeSaved, 'bus')
+                                    .then(() => PageHelper.toggleSaveButtonIcon(page))
+                                    .catch(error => console.log(error));
+                            }
+                        });
 
                         // render predictions
                         const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;

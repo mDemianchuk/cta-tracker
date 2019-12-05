@@ -126,30 +126,30 @@ export class TrainTrackerView {
                         });
                     }
 
-                    const stopToBeSaved = new FavoriteStop(stopToDisplay.id, stopToDisplay.name, routeId, routeName);
-
-                    const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
-                    PageHelper.addSaveButton(page, isAlreadySaved, async () => {
-                        const isSaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
-                        if (isSaved) {
-                            // delete the stop
-                            await this.firebaseService.deleteStop(stopToBeSaved.id, 'train')
-                                .then(() => PageHelper.toggleSaveButtonIcon(page))
-                                .catch(error => console.log(error));
-                        } else {
-                            // save the stop
-                            await this.firebaseService.saveStop(stopToBeSaved, 'train')
-                                .then(() => PageHelper.toggleSaveButtonIcon(page))
-                                .catch(error => console.log(error));
-                        }
-                    });
-
                     return this.service.getPredictions(routeId, stopToDisplay.id)
-                        .then((predictions: Prediction[]) => {
+                        .then(async (predictions: Prediction[]) => {
                             if (predictions.length > 0) {
                                 // init stop list header
                                 const directionToDisplay: string = predictions[0].direction;
                                 PageHelper.addToolbarSubtitle(page, directionToDisplay);
+
+                                const stopToBeSaved = new FavoriteStop(stopToDisplay.id, stationName, routeId, predictions[0].direction);
+
+                                const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
+                                PageHelper.addSaveButton(page, isAlreadySaved, async () => {
+                                    const isSaved: boolean = await this.firebaseService.isStopSaved(stopToBeSaved.id, 'train').catch(() => false);
+                                    if (isSaved) {
+                                        // delete the stop
+                                        await this.firebaseService.deleteStop(stopToBeSaved.id, 'train')
+                                            .then(() => PageHelper.toggleSaveButtonIcon(page))
+                                            .catch(error => console.log(error));
+                                    } else {
+                                        // save the stop
+                                        await this.firebaseService.saveStop(stopToBeSaved, 'train')
+                                            .then(() => PageHelper.toggleSaveButtonIcon(page))
+                                            .catch(error => console.log(error));
+                                    }
+                                });
 
                                 // render predictions
                                 const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
