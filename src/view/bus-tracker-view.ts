@@ -67,7 +67,7 @@ export class BusTrackerView {
                         .then((stops: Stop[]) => {
 
                             // init list header
-                            PageHelper.addListHeader(page, directionToDisplay);
+                            PageHelper.addToolbarSubtitle(page, directionToDisplay);
 
                             // add toggle button
                             if (directions.length > 1) {
@@ -173,7 +173,7 @@ export class BusTrackerView {
                     if (predictions.length > 0) {
                         // init stop list header
                         const directionToDisplay: string = predictions[0].direction;
-                        PageHelper.addListHeader(page, directionToDisplay);
+                        PageHelper.addToolbarSubtitle(page, directionToDisplay);
 
                         // render predictions
                         const predictionList = page.querySelector('ons-list') as ons.OnsListItemElement;
