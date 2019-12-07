@@ -13,6 +13,7 @@
   "dependencies": {
     "cordova-android": "^8.1.0",
     "cordova-ios": "^5.1.0",
+    "cordova-plugin-statusbar": "^2.4.3",
     "dotenv-webpack": "^1.7.0",
     "firebase": "^7.5.0",
     "onsenui": "^2.10.10",
@@ -26,7 +27,8 @@
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {}
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-statusbar": {}
     },
     "platforms": [
       "android"

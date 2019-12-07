@@ -22,4 +22,5 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <preference name="Orientation" value="portrait" />
+    <preference name="StatusBarStyle" value="lightcontent" />
 </widget>
