@@ -130,11 +130,11 @@ export class PageHelper {
         const color: string | undefined = ColorHelper.getColorCodeByRouteId(routeId);
         if (color) {
             return ons.createElement(`
-                <span class="route_thumbnail" style="border: solid ${color} 2px;"></span>
+                <span class="route_thumbnail" style="background-color: ${color};"></span>
             `) as ons.OnsPageElement;
         } else {
             return ons.createElement(`
-                <span class="route_thumbnail">${routeId}</span>
+                <span class="route_text">${routeId}</span>
             `) as ons.OnsPageElement;
         }
     }

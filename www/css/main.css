@@ -26,28 +26,62 @@
 
 .toolbar-subtitle {
     font-size: 13px;
-    color: dimgray;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .list-item {
-    height: 60px !important;
+    height: 60px;
+}
+
+.list-item--material__left {
+    margin-left: -16px;
+}
+
+.list-item__left {
+    width: 15%;
+    line-height: 15px;
+}
+
+.route_text {
+    color: white;
+    font-weight: bold;
+    margin: 0 auto;
 }
 
 .route_thumbnail {
-    width: 38px;
-    height: 38px;
-    line-height: 38px;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    border: solid #73AD21 2px;
-    border-radius: 38px;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    margin: 0 auto;
 }
 
 .prediction_icon {
     padding-right: 5px;
 }
 
+.center-box {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.center-box .title {
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.87);
+    font-size: 17px;
+}
+
 .bottom-box {
     font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.bottom-box p {
+    margin-bottom: 0;
+}
+
+#sign-in-button {
+    color: #292929 !important;
 }
