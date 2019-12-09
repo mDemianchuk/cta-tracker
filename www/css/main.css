@@ -68,9 +68,12 @@
 }
 
 .center-box .title {
-    margin-bottom: 30px;
     color: rgba(255, 255, 255, 0.87);
     font-size: 17px;
+}
+
+.center-box .input {
+    margin: 30px 0;
 }
 
 .bottom-box {
