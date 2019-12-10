@@ -63,6 +63,7 @@ export class FavoriteStopView {
 
             // init title
             PageHelper.addToolbarTitle(page, stop.stopName);
+            PageHelper.addToolbarSubtitle(page, stop.direction);
 
             const isAlreadySaved: boolean = await this.firebaseService.isStopSaved(stop.id, stopType).catch(() => false);
             PageHelper.addSaveButton(page, isAlreadySaved, async () => {
