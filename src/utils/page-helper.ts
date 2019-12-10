@@ -63,8 +63,8 @@ export class PageHelper {
         return listItem;
     }
 
-    static createFavoriteStopList(stops: FavoriteStop[]): string {
-        const listElement = ons.createElement('<ons-list></ons-list>') as Element;
+    static createFavoriteListElements(stops: FavoriteStop[], stopType: string): Element[] {
+        const elementList: Element[] = [];
         stops.forEach((stop: FavoriteStop) => {
             const thumbnail = PageHelper.createThumbnail(stop.routeId) as ons.OnsPageElement;
             const listItem = ons.createElement(`
@@ -76,10 +76,23 @@ export class PageHelper {
                     </div>
                 </ons-list-item>
             `) as ons.OnsListItemElement;
+            listItem.addEventListener('click', async () => {
+                await PageHelper.pushPage(
+                    'html/prediction.html',
+                    '#favorite-navigator',
+                    {
+                        data: {
+                            pageId: 'favorite-prediction',
+                            stopType: stopType,
+                            stop: stop
+                        }
+                    }
+                );
+            });
             listItem.querySelector('.left')!.appendChild(thumbnail);
-            listElement.appendChild(listItem);
+            elementList.push(listItem);
         });
-        return listElement.innerHTML;
+        return elementList;
     }
 
     static addToggleButton(page: ons.OnsPageElement, eventListener: EventListener): void {
@@ -139,12 +152,12 @@ export class PageHelper {
         }
     }
 
-    static addPredictionTime(page: ons.OnsPageElement) {
+    static addTimeElement(page: ons.OnsPageElement) {
         const bottomBoxElement = page.querySelector('.bottom-box') as Element;
-        const predictionTimeElement = ons.createElement(`
+        const timeElement = ons.createElement(`
             <p>Last updated at ${TimeHelper.getFormattedCurrentTime()}</p>
         `) as Element;
-        bottomBoxElement.appendChild(predictionTimeElement);
+        bottomBoxElement.appendChild(timeElement);
     }
 
     static addEmptyListMessage(page: ons.OnsPageElement, entityName: string) {

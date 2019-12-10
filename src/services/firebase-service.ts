@@ -97,9 +97,9 @@ export class FirebaseService {
                 firebase.database()
                     .ref(`users/${user.uid}/`)
                     .on('value', async () => {
-                        let stops = await this.getStopsByType('train');
-                        stops = stops.concat(await this.getStopsByType('bus'));
-                        FavoriteStopView.renderStops(stops);
+                        const trainStops = await this.getStopsByType('train');
+                        const busStops = await this.getStopsByType('bus');
+                        FavoriteStopView.renderStops(trainStops, busStops);
                     });
                 await PageHelper.replacePage('html/favorite-stop.html', '#favorite-navigator')
             }
