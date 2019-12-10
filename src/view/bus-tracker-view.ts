@@ -184,7 +184,7 @@ export class BusTrackerView {
                     } else {
                         PageHelper.addEmptyListMessage(page, 'arrival times');
                     }
-                    PageHelper.addPredictionTime(page);
+                    PageHelper.addTimeElement(page);
                 });
         } else {
             return Promise.reject('One or more attributes of the page data is missing');

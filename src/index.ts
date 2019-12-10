@@ -64,6 +64,8 @@ function initEventListeners(): void {
                 await busTrackerView.initPredictions(page);
             } else if (pageId === 'train-prediction') {
                 await trainTrackerView.initPredictions(page);
+            } else if (pageId === 'favorite-prediction') {
+                await favoriteStopView.initPrediction(page);
             }
         }
 

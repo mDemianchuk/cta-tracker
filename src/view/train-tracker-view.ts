@@ -160,7 +160,7 @@ export class TrainTrackerView {
                             } else {
                                 PageHelper.addEmptyListMessage(page, 'arrival times');
                             }
-                            PageHelper.addPredictionTime(page);
+                            PageHelper.addTimeElement(page);
                         });
                 });
         } else {
