@@ -20,6 +20,30 @@ export class PageHelper {
         return document.querySelector(navigatorId) as ons.OnsNavigatorElement;
     };
 
+    static async showDialogElement(page: ons.OnsPageElement): Promise<HTMLElement> {
+        const tabbar = document.querySelector('ons-tabbar') as ons.OnsTabbarElement;
+        let dialogElement = document.querySelector('ons-dialog') as ons.OnsDialogElement;
+
+        if (!dialogElement) {
+            dialogElement = ons.createElement(`
+                <ons-dialog cancelable animation="none">
+                  <p>
+                    Please sign in to save this stop
+                  </p>
+                  <p>
+                    <ons-button>Sign in</ons-button>
+                  </p>
+                </ons-dialog>
+            `, {append: true}) as ons.OnsDialogElement;
+            const signInButton = dialogElement.querySelector('ons-button') as ons.OnsButtonElement;
+            signInButton.addEventListener('click', () => {
+                dialogElement.hide();
+                tabbar.setActiveTab(2);
+            });
+        }
+        return await dialogElement.show();
+    }
+
     static createRouteListElement(route: Route, eventListener: EventListener): ons.OnsListItemElement {
         const thumbnail = PageHelper.createThumbnail(route.id) as ons.OnsPageElement;
         const listItem = ons.createElement(`

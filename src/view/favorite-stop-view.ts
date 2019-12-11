@@ -42,7 +42,6 @@ export class FavoriteStopView {
             listElements = listElements.concat(PageHelper.createFavoriteListElements(busStops, 'bus'));
             listElements.forEach((item: Element) => list.appendChild(item));
         }
-        PageHelper.addTimeElement(page);
     }
 
     private static cleanStopList(): void {
