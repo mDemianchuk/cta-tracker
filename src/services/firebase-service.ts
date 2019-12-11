@@ -27,6 +27,10 @@ export class FirebaseService {
         return firebase.auth().signOut();
     }
 
+    isUserSignedIn(): boolean {
+        return !!this.getCurrentUser();
+    }
+
     async getStopsByType(stopType: string): Promise<FavoriteStop[]> {
         const user: User | null = this.getCurrentUser();
         if (user) {

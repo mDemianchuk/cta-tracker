@@ -85,6 +85,14 @@
     margin-bottom: 0;
 }
 
-#sign-in-button {
+ons-button {
     color: #292929 !important;
+}
+
+.dialog-mask {
+    background-color: rgba(255, 255, 255, .3) !important;
+}
+
+.dialog-container {
+    text-align: center;
 }

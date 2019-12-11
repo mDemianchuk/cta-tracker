@@ -168,6 +168,10 @@ export class BusTrackerView {
                                     .then(() => PageHelper.toggleSaveButtonIcon(page))
                                     .catch(error => console.log(error));
                             } else {
+                                if (!this.firebaseService.isUserSignedIn()) {
+                                    await PageHelper.showDialogElement(page);
+                                }
+
                                 // save the stop
                                 await this.firebaseService.saveStop(stopToBeSaved, 'bus')
                                     .then(() => PageHelper.toggleSaveButtonIcon(page))
