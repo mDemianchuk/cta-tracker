@@ -6,10 +6,11 @@ the official CTA [Train](https://www.transitchicago.com/developers/traintracker/
 The user can see arrival times for any bus or train stop and save it to their Favorite Stops to have easy access to it.
 
 ## Demo
-![iOS client demo](https://raw.githubusercontent.com/mDemianchuk/cta-tracker/fix/mdemianchukGif/img/ios-demo.gif)
+![iOS client demo](https://raw.githubusercontent.com/mDemianchuk/cta-tracker/master/img/ios-demo.gif)
 
 ## Requirements
 - Node.js
+- Cordova
 - [iOS requirements](https://cordova.apache.org/docs/en/latest/guide/platforms/ios/#installing-the-requirements)
     * Xcode
     * Deployment tools
@@ -19,7 +20,11 @@ The user can see arrival times for any bus or train stop and save it to their Fa
     * Android SDK
 
 ## Usage
-1. Add the [platforms](https://cordova.apache.org/docs/en/latest/guide/cli/index.html#add-platforms) that you want to target your app
+1. Install project dependencies
+   ```$xslt
+   $ npm install
+   ```
+2. Add the [platforms](https://cordova.apache.org/docs/en/latest/guide/cli/index.html#add-platforms) that you want to target your app
     ```$xslt
     $ cordova platform add ios
     $ cordova platform add android
@@ -30,14 +35,14 @@ The user can see arrival times for any bus or train stop and save it to their Fa
     $ cordova platform ls
     ```
 
-2. Install [pre-requisites](https://cordova.apache.org/docs/en/latest/guide/cli/index.html#install-pre-requisites-for-building) for building
+3. Install [pre-requisites](https://cordova.apache.org/docs/en/latest/guide/cli/index.html#install-pre-requisites-for-building) for building
 
     To check if you satisfy requirements for building the platform:
     ```$xslt
     $ cordova requirements
     ```
 
-3. Run the app
+4. Run the app
     ```$xslt
-    npm start
+    $ npm start
     ```
