@@ -6,7 +6,7 @@ the official CTA [Train](https://www.transitchicago.com/developers/traintracker/
 The user can see arrival times for any bus or train stop and save it to their Favorite Stops to have easy access to it.
 
 ## Demo
-![iOS client demo](https://raw.githubusercontent.com/mDemianchuk/cta-tracker/a634e667d5ea9f2d93dbe553bd979ee84653b9b3/img/ios-demo.gif)
+![iOS client demo](https://raw.githubusercontent.com/mDemianchuk/cta-tracker/fix/mdemianchukGif/img/ios-demo.gif)
 
 ## Requirements
 - Node.js
