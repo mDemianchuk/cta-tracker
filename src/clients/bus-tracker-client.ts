@@ -4,7 +4,7 @@ export class BusTrackerClient {
     private readonly baseUrl: URL;
 
     constructor() {
-        this.baseUrl = new URL('http://ec2-34-205-41-103.compute-1.amazonaws.com/');
+        this.baseUrl = new URL((process.env.BUS_CLIENT_URL) as string);
     }
 
     async getRotues(): Promise<object[]> {
