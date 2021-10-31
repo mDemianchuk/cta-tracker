@@ -1,9 +1,8 @@
 ## Description
 __CTA Tracker__ is a multi-platform mobile application for the Chicago Transit Authority bus and train tracking. 
-This app utilizes two microservices – [CTA Train Tracker Service](https://github.com/mDemianchuk/cta-train-tracker-service) 
-and [CTA Bus Tracker Service](https://github.com/mDemianchuk/cta-bus-tracker-service) that are gateways for 
-the official CTA [Train](https://www.transitchicago.com/developers/traintracker/) and [Bus](https://www.transitchicago.com/developers/bustracker/) Tracker APIs. 
-The user can see arrival times for any bus or train stop and save it to their Favorite Stops to have easy access to it.
+The backend for this app is implemented in two microservices – [CTA Train Tracker Service](https://github.com/mDemianchuk/cta-train-tracker-service) 
+and [CTA Bus Tracker Service](https://github.com/mDemianchuk/cta-bus-tracker-service) that utilize official CTA [Train Tracker](https://www.transitchicago.com/developers/traintracker/) and [Bus Tracker](https://www.transitchicago.com/developers/bustracker/) APIs.
+Users can get arrival times for any bus or train stop and conveniently access their favorite stops from the Favorite Stops tab.
 
 ## Demo
 ![iOS client demo](https://raw.githubusercontent.com/mDemianchuk/cta-tracker/master/img/ios-demo.gif)
